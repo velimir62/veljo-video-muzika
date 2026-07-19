@@ -2,66 +2,82 @@
 <html>
 <head>
 <title>Veljo Video Muzika</title>
+
+<style>
+body {
+    background:black;
+    color:white;
+    text-align:center;
+    font-family:Arial;
+}
+
+button {
+    font-size:22px;
+    padding:15px 30px;
+    margin:10px;
+    border-radius:10px;
+    cursor:pointer;
+}
+
+video {
+    width:80%;
+    max-width:900px;
+}
+</style>
+
 </head>
 
-<body style="background:black; color:white; text-align:center;">
+<body>
 
 <h1>🎵 Veljo Video Muzika 🎵</h1>
 
-<button style="font-size:25px; padding:20px; margin:10px;">
-Boki
-</button>
+<video id="player" controls></video>
 
-<button style="font-size:25px; padding:20px; margin:10px;">
-Lj
-</button>
-
-<button style="font-size:25px; padding:20px; margin:10px;">
-Mil
-</button>
-
-<!DOCTYPE html>
-<html>
-<head>
-<title>Veljo Video Muzika</title>
-</head>
-
-<body style="background:black; color:white; text-align:center;">
-
-<h1>🎵 Veljo Video Muzika 🎵</h1>
-
-<video id="player" width="80%" controls></video>
-
-<br><br>
-
-<button onclick="play('boki.mp4')" style="font-size:25px;padding:20px;margin:10px;">
-Boki
-</button>
-
-<button onclick="play('lj.mp4')" style="font-size:25px;padding:20px;margin:10px;">
-Lj
-</button>
-
-<button onclick="play('mil.mp4')" style="font-size:25px;padding:20px;margin:10px;">
-Mil
-</button>
-
-<button onclick="play('u nasim godinama.mp4')" style="font-size:25px;padding:20px;margin:10px;">
-U našim godinama
-</button>
+<div id="buttons">
+Učitavanje videa...
+</div>
 
 
 <script>
 
+const user = "velimir62";
+const repo = "veljo-video-muzika";
+
+fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
+.then(response => response.json())
+.then(files => {
+
+    let buttons = "";
+
+    files.forEach(file => {
+
+        if(file.name.toLowerCase().endsWith(".mp4")) {
+
+            buttons += `
+            <button onclick="play('${file.name}')">
+            🎬 ${file.name}
+            </button>
+            `;
+
+        }
+
+    });
+
+    document.getElementById("buttons").innerHTML = buttons;
+
+});
+
+
 function play(video) {
-document.getElementById("player").src = video;
-document.getElementById("player").play();
+
+    let player=document.getElementById("player");
+
+    player.src=video;
+    player.play();
+
 }
 
 </script>
-
-</body>
-</html>
 
 </body>
 </html>
