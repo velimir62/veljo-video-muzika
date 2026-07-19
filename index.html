@@ -40,26 +40,20 @@ video {
 
 <h1>🎵 Veljo Video Muzika 🎵</h1>
 
-
 <video id="player" controls></video>
-
 
 <div id="buttons">
 Učitavanje videa...
 </div>
 
 
-
 <script>
-
 
 const user = "velimir62";
 const repo = "veljo-video-muzika";
 
-
 let videos = [];
 let current = 0;
-
 
 
 fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
@@ -71,16 +65,17 @@ fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
 
     files.forEach(file => {
 
-
         if(file.name.toLowerCase().endsWith(".mp4")) {
 
             videos.push(file.name);
 
         }
 
-
     });
 
+
+    // sortiranje po imenu
+    videos.sort();
 
 
     let buttons = "";
@@ -88,18 +83,13 @@ fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
 
     videos.forEach(video => {
 
-
         buttons += `
-
         <button onclick="play('${video}')">
         🎬 ${video}
         </button>
-
         `;
 
-
     });
-
 
 
     document.getElementById("buttons").innerHTML = buttons;
@@ -109,26 +99,17 @@ fetch(`https://api.github.com/repos/${user}/${repo}/contents/`)
 
 
 
-
-
 function play(video) {
-
 
     current = videos.indexOf(video);
 
-
     let player = document.getElementById("player");
-
 
     player.src = video;
 
-
     player.play();
 
-
 }
-
-
 
 
 
