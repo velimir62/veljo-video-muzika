@@ -20,9 +20,48 @@ Lj
 Mil
 </button>
 
-<button style="font-size:25px; padding:20px; margin:10px;">
+<!DOCTYPE html>
+<html>
+<head>
+<title>Veljo Video Muzika</title>
+</head>
+
+<body style="background:black; color:white; text-align:center;">
+
+<h1>🎵 Veljo Video Muzika 🎵</h1>
+
+<video id="player" width="80%" controls></video>
+
+<br><br>
+
+<button onclick="play('boki.mp4')" style="font-size:25px;padding:20px;margin:10px;">
+Boki
+</button>
+
+<button onclick="play('lj.mp4')" style="font-size:25px;padding:20px;margin:10px;">
+Lj
+</button>
+
+<button onclick="play('mil.mp4')" style="font-size:25px;padding:20px;margin:10px;">
+Mil
+</button>
+
+<button onclick="play('u nasim godinama.mp4')" style="font-size:25px;padding:20px;margin:10px;">
 U našim godinama
 </button>
+
+
+<script>
+
+function play(video) {
+document.getElementById("player").src = video;
+document.getElementById("player").play();
+}
+
+</script>
+
+</body>
+</html>
 
 </body>
 </html>
