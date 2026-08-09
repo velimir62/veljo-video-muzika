@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+cd ~/Desktop/veljo-video/veljo-video-muzika-main && rm -f index.html && echo '<!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -16,46 +16,7 @@
 </head>
 <body>
     <h1>🎵 VELJO VIDEO MUZIKA</h1>
-    <div class="video-grid">
-        <div class="video-item"><video src="processed/Dodo.mp4" controls></video><div class="video-name">Dodo</div></div>
-        <div class="video-item"><video src="processed/Gore nego lani.mp4" controls></video><div class="video-name">Gore nego lani</div></div>
-        <div class="video-item"><video src="processed/James party.mp4" controls></video><div class="video-name">James party</div></div>
-        <div class="video-item"><video src="processed/Mara.mp4" controls></video><div class="video-name">Mara</div></div>
-        <div class="video-item"><video src="processed/Nebo Sivo Kiša.mp4" controls></video><div class="video-name">Nebo Sivo Kiša</div></div>
-        <div class="video-item"><video src="processed/Vrbasov Šapat.mp4" controls></video><div class="video-name">Vrbasov Šapat</div></div>
-        <div class="video-item"><video src="processed/Zeleni Brijeg.mp4" controls></video><div class="video-name">Zeleni Brijeg</div></div>
-        <div class="video-item"><video src="processed/boki.mp4" controls></video><div class="video-name">boki</div></div>
-        <div class="video-item"><video src="processed/dolazim i ja.mp4" controls></video><div class="video-name">dolazim i ja</div></div>
-        <div class="video-item"><video src="processed/evo me stigoh.mp4" controls></video><div class="video-name">evo me stigoh</div></div>
-        <div class="video-item"><video src="processed/fudbal.mp4" controls></video><div class="video-name">fudbal</div></div>
-        <div class="video-item"><video src="processed/heretic.mp4" controls></video><div class="video-name">heretic</div></div>
-        <div class="video-item"><video src="processed/jesen.mp4" controls></video><div class="video-name">jesen</div></div>
-        <div class="video-item"><video src="processed/kita.mp4" controls></video><div class="video-name">kita</div></div>
-        <div class="video-item"><video src="processed/lj.mp4" controls></video><div class="video-name">lj</div></div>
-        <div class="video-item"><video src="processed/mil.mp4" controls></video><div class="video-name">mil</div></div>
-        <div class="video-item"><video src="processed/moja raja.mp4" controls></video><div class="video-name">moja raja</div></div>
-        <div class="video-item"><video src="processed/moja slava.mp4" controls></video><div class="video-name">moja slava</div></div>
-        <div class="video-item"><video src="processed/poslednja luka.mp4" controls></video><div class="video-name">poslednja luka</div></div>
-        <div class="video-item"><video src="processed/svake noci.mp4" controls></video><div class="video-name">svake noci</div></div>
-        <div class="video-item"><video src="processed/u duhu pravoslavlja.mp4" controls></video><div class="video-name">u duhu pravoslavlja</div></div>
-        <div class="video-item"><video src="processed/u nasim godinama.mp4" controls></video><div class="video-name">u nasim godinama</div></div>
-        <div class="video-item"><video src="processed/ustaj.mp4" controls></video><div class="video-name">ustaj</div></div>
-        <div class="video-item"><video src="processed/znakovi.mp4" controls></video><div class="video-name">znakovi</div></div>
-        <div class="video-item"><video src="processed/Ђуличан подрум.mp4" controls></video><div class="video-name">Ђуличан подрум</div></div>
-        <div class="video-item"><video src="processed/Гламочна бури.mp4" controls></video><div class="video-name">Гламочна бури</div></div>
-        <div class="video-item"><video src="processed/Магарац Самара.mp4" controls></video><div class="video-name">Магарац Самара</div></div>
-        <div class="video-item"><video src="processed/Моје пјесме су остале.mp4" controls></video><div class="video-name">Моје пјесме су остале</div></div>
-        <div class="video-item"><video src="processed/На последњој степеници.mp4" controls></video><div class="video-name">На последњој степеници</div></div>
-        <div class="video-item"><video src="processed/Није било Торте.mp4" controls></video><div class="video-name">Није било Торте</div></div>
-        <div class="video-item"><video src="processed/живот.mp4" controls></video><div class="video-name">живот</div></div>
-        <div class="video-item"><video src="processed/кишни дани.mp4" controls></video><div class="video-name">кишни дани</div></div>
-        <div class="video-item"><video src="processed/нестају у мраку.mp4" controls></video><div class="video-name">нестају у мраку</div></div>
-        <div class="video-item"><video src="processed/систем ме дави.mp4" controls></video><div class="video-name">систем ме дави</div></div>
-        <div class="video-item"><video src="processed/увод.mp4" controls></video><div class="video-name">увод</div></div>
-        <div class="video-item"><video src="processed/шкорпија.mp4" controls></video><div class="video-name">шкорпија</div></div>
-        <div class="video-item"><video src="processed/ђуличан.mp4" controls></video><div class="video-name">ђуличан</div></div>
-        <div class="video-item"><video src="processed/јопет.mp4" controls></video><div class="video-name">јопет</div></div>
-    </div>
+    <div class="video-grid">' > index.html && for f in ../processed/*.mp4; do name=$(basename "$f" .mp4); echo "        <div class=\"video-item\"><video src=\"$f\" controls></video><div class=\"video-name\">$name</div></div>" >> index.html; done && echo '    </div>
     <footer>MADE BY VELJO</footer>
 </body>
-</html>
+</html>' >> index.html
