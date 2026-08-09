@@ -149,12 +149,12 @@
 </head>
 <body>
 
-    <h1>🎬 Veljo Video Muzika</h1>
-    <div class="subtitle">📂 MP4 video zapisi</div>
+    <h1>Veljo Video Muzika</h1>
+    <div class="subtitle">MP4 video zapisi</div>
 
     <div class="player-wrapper">
         <video id="videoPlayer" controls preload="metadata"></video>
-        <div class="song-title" id="currentSongTitle">🎵 Izaberi pjesmu</div>
+        <div class="song-title" id="currentSongTitle">Izaberi pjesmu</div>
         <div class="status-text" id="currentStatus">Trenutno: -</div>
 
         <div class="controls">
@@ -261,7 +261,7 @@
 
             video.src = videoUrl;
             video.load();
-            currentTitle.textContent = `🎵 ${songName.replace('.mp4', '')}`;
+            currentTitle.textContent = `${songName.replace('.mp4', '')}`;
             currentStatus.textContent = `Trenutno: ${index + 1} / ${songs.length}`;
 
             document.querySelectorAll('.song-item').forEach((el, i) => {
