@@ -1,765 +1,1188 @@
-```html
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>VELJO MP3 MUZIKA</title>
+    <title>VELJO VIDEO MUZIKA</title>
 
-<style>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-* {
-    box-sizing: border-box;
-}
+        body {
+            margin: 0;
+            background: #080808;
+            color: white;
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
-body {
-    margin: 0;
-    background: #080808;
-    color: white;
-    font-family: Arial, sans-serif;
-}
+        header {
+            background: #111;
+            padding: 22px 15px;
+            text-align: center;
+            border-bottom: 2px solid #ffd700;
+        }
 
-/* HEADER */
+        header h1 {
+            margin: 0;
+            color: #ffd700;
+            font-size: 30px;
+        }
 
-header {
-    background: #111;
-    padding: 22px;
-    text-align: center;
-    border-bottom: 2px solid #ffd700;
-}
+        header p {
+            margin: 8px 0 0;
+            color: #aaa;
+            font-size: 14px;
+        }
 
-header h1 {
-    margin: 0;
-    color: #ffd700;
-    font-size: 30px;
-}
+        .container {
+            width: 95%;
+            max-width: 1200px;
+            margin: 25px auto;
+        }
 
-/* GLAVNI KONTEJNER */
+        /* VIDEO */
 
-.container {
-    display: flex;
-    max-width: 1400px;
-    margin: auto;
-    min-height: calc(100vh - 80px);
-}
+        .video-box {
+            background: #111;
+            border-radius: 14px;
+            padding: 15px;
+            box-shadow: 0 0 25px rgba(255, 215, 0, 0.08);
+        }
 
-/* PLAYER */
+        video {
+            display: block;
+            width: 100%;
+            max-height: 70vh;
+            background: #000;
+            border-radius: 10px;
+        }
 
-.player-area {
-    flex: 1;
-    padding: 40px;
-}
+        /* INFO */
 
-/* PLAYER BOX */
+        .now-playing {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            margin-top: 15px;
+            padding: 15px;
+            background: #181818;
+            border-radius: 10px;
+        }
 
-.player-box {
-    max-width: 800px;
-    margin: auto;
-    background: #151515;
-    border: 1px solid #333;
-    border-radius: 18px;
-    padding: 35px;
-    text-align: center;
-    box-shadow: 0 0 40px rgba(255,215,0,0.08);
-}
+        .current-song {
+            color: #ffd700;
+            font-size: 20px;
+            font-weight: bold;
+            word-break: break-word;
+        }
 
-/* NASLOV */
+        .song-number {
+            color: #aaa;
+            white-space: nowrap;
+        }
 
-.player-title {
-    color: #ffd700;
-    font-size: 18px;
-    font-weight: bold;
-    margin-bottom: 15px;
-}
+        /* BUTTONS */
 
-/* TRENUTNA PESMA */
+        .controls {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin: 18px 0;
+        }
 
-#currentSong {
-    font-size: 25px;
-    font-weight: bold;
-    margin-bottom: 8px;
-    word-break: break-word;
-}
+        button {
+            border: none;
+            background: #222;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.2s;
+        }
 
-.song-number {
-    color: #777;
-    font-size: 14px;
-    margin-bottom: 25px;
-}
+        button:hover {
+            background: #333;
+            transform: translateY(-1px);
+        }
 
-/* AUDIO */
+        button.active {
+            background: #ffd700;
+            color: #000;
+        }
 
-audio {
-    width: 100%;
-    margin-bottom: 25px;
-}
+        /* SEARCH */
 
-/* DUGMAD */
+        .search-box {
+            margin: 20px 0;
+        }
 
-.controls {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-wrap: wrap;
-}
+        #search {
+            width: 100%;
+            padding: 14px;
+            border: 1px solid #333;
+            border-radius: 9px;
+            background: #151515;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
 
-.controls button {
-    background: #222;
-    color: white;
-    border: 1px solid #444;
-    border-radius: 10px;
-    padding: 13px 18px;
-    font-size: 17px;
-    cursor: pointer;
-    transition: 0.2s;
-}
+        #search:focus {
+            border-color: #ffd700;
+        }
 
-.controls button:hover {
-    background: #333;
-    border-color: #ffd700;
-    color: #ffd700;
-}
+        /* PLAYLIST */
 
-.controls .main-btn {
-    background: #ffd700;
-    color: #000;
-    border-color: #ffd700;
-    font-size: 20px;
-    font-weight: bold;
-    min-width: 65px;
-}
+        .playlist-title {
+            color: #ffd700;
+            font-size: 22px;
+            margin: 20px 0 12px;
+        }
 
-.controls .main-btn:hover {
-    background: #fff;
-    color: #000;
-}
+        #playlist {
+            display: grid;
+            gap: 8px;
+        }
 
-/* AKTIVNI SHUFFLE / REPEAT */
+        .song {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            padding: 14px 16px;
+            background: #151515;
+            border: 1px solid #222;
+            border-radius: 9px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
 
-.controls button.active {
-    background: #ffd700;
-    color: #000;
-    border-color: #ffd700;
-}
+        .song:hover {
+            background: #222;
+            border-color: #444;
+        }
 
-/* MADE BY */
+        .song.active {
+            background: #332d00;
+            border-color: #ffd700;
+        }
 
-.made-by {
-    margin-top: 25px;
-    color: #ffd700;
-    font-weight: bold;
-    font-size: 14px;
-    letter-spacing: 3px;
-}
+        .song-name {
+            font-size: 16px;
+            word-break: break-word;
+        }
 
-/* PLAYLIST */
+        .song-number-small {
+            color: #888;
+            min-width: 35px;
+        }
 
-.playlist {
-    width: 380px;
-    background: #111;
-    border-left: 1px solid #333;
-    padding: 20px;
-    overflow-y: auto;
-    max-height: calc(100vh - 80px);
-}
+        .loading {
+            text-align: center;
+            padding: 30px;
+            color: #aaa;
+        }
 
-.playlist h2 {
-    text-align: center;
-    color: #ffd700;
-    margin-top: 0;
-    border-bottom: 1px solid #333;
-    padding-bottom: 15px;
-}
+        .error {
+            background: #300;
+            color: #ff9999;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
 
-/* PESMA */
+        footer {
+            margin-top: 35px;
+            padding: 25px;
+            text-align: center;
+            color: #666;
+            border-top: 1px solid #222;
+        }
 
-.song {
-    background: #191919;
-    border: 1px solid #333;
-    border-radius: 10px;
-    padding: 13px;
-    margin-bottom: 9px;
-    cursor: pointer;
-    transition: 0.2s;
-}
+        @media (max-width: 600px) {
 
-.song:hover {
-    background: #252525;
-    border-color: #ffd700;
-    transform: translateX(-3px);
-}
+            header h1 {
+                font-size: 23px;
+            }
 
-.song.active {
-    background: #302900;
-    border: 1px solid #ffd700;
-    box-shadow: 0 0 12px rgba(255,215,0,0.2);
-}
+            .now-playing {
+                flex-direction: column;
+                align-items: flex-start;
+            }
 
-.song-name {
-    font-size: 16px;
-    font-weight: bold;
-    word-break: break-word;
-}
+            .current-song {
+                font-size: 17px;
+            }
 
-.song-made {
-    color: #ffd700;
-    font-size: 10px;
-    font-weight: bold;
-    letter-spacing: 2px;
-    margin-top: 5px;
-}
+            .song {
+                align-items: flex-start;
+            }
 
-/* FOOTER */
-
-footer {
-    text-align: center;
-    background: #111;
-    color: #ffd700;
-    padding: 20px;
-    font-weight: bold;
-    border-top: 1px solid #333;
-}
-
-/* TELEFON */
-
-@media (max-width: 850px) {
-
-    .container {
-        flex-direction: column;
-    }
-
-    .player-area {
-        padding: 20px;
-    }
-
-    .playlist {
-        width: 100%;
-        max-height: none;
-        border-left: none;
-        border-top: 1px solid #333;
-    }
-
-    .player-box {
-        padding: 22px;
-    }
-
-    #currentSong {
-        font-size: 21px;
-    }
-
-}
-
-</style>
+            button {
+                padding: 10px 13px;
+                font-size: 14px;
+            }
+        }
+    </style>
 </head>
 
 <body>
 
-
 <header>
-    <h1>🎵 VELJO MP3 MUZIKA</h1>
+    <h1>🎬 VELJO VIDEO MUZIKA</h1>
+    <p>Video muzika — MP4</p>
 </header>
 
 
 <div class="container">
 
+    <!-- VIDEO PLAYER -->
 
-<!-- PLAYER -->
+    <div class="video-box">
 
-<main class="player-area">
+        <video
+            id="videoPlayer"
+            controls
+            playsinline
+            preload="metadata">
+        </video>
 
-    <div class="player-box">
+        <div class="now-playing">
 
-        <div class="player-title">
-            🎧 TRENUTNO SE PUŠTA
-        </div>
+            <div>
+                <div style="font-size:12px;color:#777;margin-bottom:5px;">
+                    TRENUTNO SVIRA
+                </div>
 
-        <div id="currentSong">
-            Izaberi pesmu
-        </div>
+                <div
+                    id="currentSong"
+                    class="current-song">
+                    Učitavanje...
+                </div>
+            </div>
 
-        <div class="song-number" id="songNumber">
-            0 / 0
-        </div>
+            <div
+                id="songNumber"
+                class="song-number">
+                0 / 0
+            </div>
 
-        <audio id="audioPlayer" controls></audio>
-
-
-        <div class="controls">
-
-            <button onclick="previousSong()">
-                ⏮
-            </button>
-
-            <button
-                class="main-btn"
-                onclick="togglePlay()"
-                id="playButton">
-                ▶
-            </button>
-
-            <button onclick="nextSong()">
-                ⏭
-            </button>
-
-            <button
-                onclick="toggleShuffle()"
-                id="shuffleButton">
-                🔀
-            </button>
-
-            <button
-                onclick="toggleRepeat()"
-                id="repeatButton">
-                🔁
-            </button>
-
-        </div>
-
-
-        <div class="made-by">
-            MADE BY VELJO
         </div>
 
     </div>
 
-</main>
+
+    <!-- CONTROLS -->
+
+    <div class="controls">
+
+        <button
+            id="previousButton"
+            title="Prethodni video">
+            ⏮ Prethodni
+        </button>
+
+        <button
+            id="playButton"
+            title="Play / Pause">
+            ▶ Play
+        </button>
+
+        <button
+            id="nextButton"
+            title="Sljedeći video">
+            Sljedeći ⏭
+        </button>
+
+        <button
+            id="shuffleButton"
+            title="Nasumično">
+            🔀 Shuffle
+        </button>
+
+        <button
+            id="repeatButton"
+            title="Ponavljanje">
+            🔁 Repeat
+        </button>
+
+    </div>
 
 
-<!-- PLAYLIST -->
+    <!-- SEARCH -->
 
-<aside class="playlist">
+    <div class="search-box">
 
-    <h2>📂 PLAYLIST</h2>
+        <input
+            id="search"
+            type="search"
+            placeholder="🔎 Pretraži video..."
+            autocomplete="off">
 
-    <div id="playlist"></div>
+    </div>
 
-</aside>
 
+    <!-- PLAYLIST -->
+
+    <div class="playlist-title">
+        🎵 PLAYLISTA
+    </div>
+
+    <div id="playlist">
+
+        <div class="loading">
+            Učitavam MP4 fajlove...
+        </div>
+
+    </div>
+
+
+    <div id="errorBox"></div>
 
 </div>
 
 
 <footer>
-    MADE BY VELJO
+    VELJO VIDEO MUZIKA © 2026
 </footer>
-
 
 
 <script>
 
+    /*
+    =====================================================
+       PODEŠAVANJE REPOZITORIJA
+    =====================================================
+    */
 
-/* =====================================
-   MP3 FAJLOVI
-===================================== */
-
-const mp3Files = [
-
-    "Dodo.mp3",
-    "Gore nego lani.mp3",
-    "James party.mp3",
-    "Mara.mp3",
-    "Nebo Sivo Kiša.mp3",
-    "Vrbasov Šapat.mp3",
-    "Zeleni Brijeg.mp3",
-    "boki.mp3",
-    "dolazim i ja.mp3",
-    "evo me stigoh.mp3",
-    "fudbal.mp3",
-    "heretic.mp3",
-    "jesen.mp3",
-    "kita.mp3",
-    "lj.mp3",
-    "mil.mp3",
-    "moja raja.mp3",
-    "moja slava.mp3",
-    "poslednja luka.mp3",
-    "svake noci.mp3",
-    "u duhu pravoslavlja.mp3",
-    "u nasim godinama.mp3",
-    "ustaj.mp3",
-    "znakovi.mp3",
-
-    "Ђуличан подрум.mp3",
-    "Гламочна бури.mp3",
-    "Магарац Самара.mp3",
-    "Моје пјесме су остале.mp3",
-    "На последњој степеници.mp3",
-    "Није било Торте.mp3",
-    "живот.mp3",
-    "кишни дани.mp3",
-    "нестају у мраку.mp3",
-    "систем ме дави.mp3",
-    "увод.mp3",
-    "шкорпија.mp3",
-    "ђуличан.mp3",
-    "јопет.mp3"
-
-];
+    const GITHUB_USER = "velimir62";
+    const GITHUB_REPO = "veljo-video-muzika";
+    const GITHUB_BRANCH = "main";
+    const VIDEO_FOLDER = "processed";
 
 
-/* =====================================
-   VARIJABLE
-===================================== */
+    /*
+    =====================================================
+       URL ZA GITHUB API
+    =====================================================
+    */
 
-const audioPlayer =
-    document.getElementById("audioPlayer");
-
-const playlist =
-    document.getElementById("playlist");
-
-const currentSong =
-    document.getElementById("currentSong");
-
-const songNumber =
-    document.getElementById("songNumber");
-
-const playButton =
-    document.getElementById("playButton");
-
-const shuffleButton =
-    document.getElementById("shuffleButton");
-
-const repeatButton =
-    document.getElementById("repeatButton");
+    const API_URL =
+        `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${VIDEO_FOLDER}?ref=${GITHUB_BRANCH}`;
 
 
-let currentIndex = 0;
+    /*
+    =====================================================
+       ELEMENTI
+    =====================================================
+    */
 
-let shuffle = false;
+    const videoPlayer =
+        document.getElementById("videoPlayer");
 
-let repeat = false;
+    const playlist =
+        document.getElementById("playlist");
 
+    const currentSong =
+        document.getElementById("currentSong");
 
-/* =====================================
-   NAPRAVI PLAYLISTU
-===================================== */
+    const songNumber =
+        document.getElementById("songNumber");
 
-mp3Files.forEach((file, index) => {
+    const playButton =
+        document.getElementById("playButton");
 
-    const song = document.createElement("div");
+    const previousButton =
+        document.getElementById("previousButton");
 
-    song.className = "song";
+    const nextButton =
+        document.getElementById("nextButton");
 
-    const name =
-        file.replace(".mp3", "");
+    const shuffleButton =
+        document.getElementById("shuffleButton");
 
-    song.innerHTML = `
+    const repeatButton =
+        document.getElementById("repeatButton");
 
-        <div class="song-name">
-            🎵 ${name}
-        </div>
+    const search =
+        document.getElementById("search");
 
-        <div class="song-made">
-            MADE BY VELJO
-        </div>
-
-    `;
-
-    song.onclick = () => {
-
-        playSong(index);
-
-    };
-
-    playlist.appendChild(song);
-
-});
+    const errorBox =
+        document.getElementById("errorBox");
 
 
-/* =====================================
-   PUSTI PESMU
-===================================== */
+    /*
+    =====================================================
+       VARIJABLE
+    =====================================================
+    */
 
-function playSong(index) {
+    let mp4Files = [];
 
-    if (
-        index < 0 ||
-        index >= mp3Files.length
-    ) {
-        return;
+    let currentIndex = 0;
+
+    let shuffle = false;
+
+    let repeat = false;
+
+
+    /*
+    =====================================================
+       PRIKAŽI GREŠKU
+    =====================================================
+    */
+
+    function showError(message) {
+
+        errorBox.innerHTML = `
+            <div class="error">
+                <strong>Greška:</strong><br>
+                ${message}
+            </div>
+        `;
     }
 
-    currentIndex = index;
 
-    const file =
-        mp3Files[currentIndex];
+    /*
+    =====================================================
+       UČITAJ MP4 FAJLOVE SA GITHUBA
+    =====================================================
+    */
 
-    const name =
-        file.replace(".mp3", "");
+    async function loadVideos() {
 
-    audioPlayer.src =
-        "processed/" + file;
+        try {
 
-    currentSong.textContent =
-        name;
+            const response =
+                await fetch(API_URL);
 
-    songNumber.textContent =
-        `${currentIndex + 1} / ${mp3Files.length}`;
+            if (!response.ok) {
 
-    audioPlayer.play();
-
-    updatePlaylist();
-
-}
-
-
-/* =====================================
-   PLAY / PAUSE
-===================================== */
-
-function togglePlay() {
-
-    if (!audioPlayer.src) {
-
-        playSong(currentIndex);
-
-        return;
-
-    }
-
-    if (audioPlayer.paused) {
-
-        audioPlayer.play();
-
-    } else {
-
-        audioPlayer.pause();
-
-    }
-
-}
-
-
-/* =====================================
-   PROMENA IKONE PLAY
-===================================== */
-
-audioPlayer.addEventListener(
-    "play",
-    () => {
-
-        playButton.textContent = "⏸";
-
-    }
-);
-
-
-audioPlayer.addEventListener(
-    "pause",
-    () => {
-
-        playButton.textContent = "▶";
-
-    }
-);
-
-
-/* =====================================
-   NEXT
-===================================== */
-
-function nextSong() {
-
-    if (shuffle) {
-
-        let nextIndex;
-
-        do {
-
-            nextIndex =
-                Math.floor(
-                    Math.random() *
-                    mp3Files.length
+                throw new Error(
+                    `GitHub API greška: ${response.status}`
                 );
 
-        } while (
-            nextIndex === currentIndex &&
-            mp3Files.length > 1
-        );
+            }
 
-        currentIndex = nextIndex;
+            const files =
+                await response.json();
 
-    } else {
 
-        currentIndex++;
+            /*
+               Uzmi samo MP4 fajlove
+            */
 
-        if (
-            currentIndex >=
-            mp3Files.length
-        ) {
+            mp4Files = files
+                .filter(file =>
+                    file.type === "file" &&
+                    /\.mp4$/i.test(file.name)
+                )
+                .sort((a, b) =>
+                    a.name.localeCompare(
+                        b.name,
+                        "sr",
+                        {
+                            sensitivity: "base"
+                        }
+                    )
+                );
 
-            currentIndex = 0;
+
+            if (mp4Files.length === 0) {
+
+                throw new Error(
+                    "U folderu processed nisu pronađeni MP4 fajlovi."
+                );
+
+            }
+
+
+            /*
+               Prikaži playlistu
+            */
+
+            renderPlaylist(mp4Files);
+
+
+            /*
+               Prvi video
+            */
+
+            updateCurrentSong();
+
+        }
+
+        catch (error) {
+
+            console.error(error);
+
+            playlist.innerHTML = "";
+
+            showError(
+                "Nisam mogao učitati video fajlove. " +
+                "Provjeri da li je GitHub repository javan " +
+                "i da li folder processed postoji."
+            );
 
         }
 
     }
 
-    playSong(currentIndex);
-
-}
-
-
-/* =====================================
-   PREVIOUS
-===================================== */
-
-function previousSong() {
 
     /*
-       Ako je pesma već prošla
-       više od 3 sekunde,
-       vrati je na početak.
+    =====================================================
+       NAPRAVI PLAYLISTU
+    =====================================================
     */
 
-    if (audioPlayer.currentTime > 3) {
+    function renderPlaylist(files) {
 
-        audioPlayer.currentTime = 0;
+        playlist.innerHTML = "";
 
-        return;
+
+        files.forEach((file, index) => {
+
+            const song =
+                document.createElement("div");
+
+            song.className = "song";
+
+            song.dataset.index = index;
+
+
+            song.innerHTML = `
+
+                <div style="display:flex;gap:10px;align-items:center;min-width:0;">
+
+                    <div class="song-number-small">
+                        ${index + 1}
+                    </div>
+
+                    <div class="song-name">
+                        🎬 ${escapeHtml(
+                            removeExtension(file.name)
+                        )}
+                    </div>
+
+                </div>
+
+            `;
+
+
+            song.addEventListener(
+                "click",
+                () => playSong(index)
+            );
+
+
+            playlist.appendChild(song);
+
+        });
+
+
+        updatePlaylist();
 
     }
 
 
-    currentIndex--;
+    /*
+    =====================================================
+       UKLONI .MP4
+    =====================================================
+    */
 
-    if (currentIndex < 0) {
+    function removeExtension(filename) {
 
-        currentIndex =
-            mp3Files.length - 1;
+        return filename.replace(
+            /\.mp4$/i,
+            ""
+        );
 
     }
 
-    playSong(currentIndex);
 
-}
+    /*
+    =====================================================
+       ZAŠTITA HTML TEKSTA
+    =====================================================
+    */
+
+    function escapeHtml(text) {
+
+        const div =
+            document.createElement("div");
+
+        div.textContent = text;
+
+        return div.innerHTML;
+
+    }
 
 
-/* =====================================
-   AUTOMATSKI SLEDEĆA PESMA
-===================================== */
+    /*
+    =====================================================
+       URL VIDEA
+    =====================================================
+    */
 
-audioPlayer.addEventListener(
-    "ended",
-    () => {
+    function getVideoURL(filename) {
+
+        return (
+            "https://raw.githubusercontent.com/" +
+            GITHUB_USER +
+            "/" +
+            GITHUB_REPO +
+            "/" +
+            GITHUB_BRANCH +
+            "/" +
+            VIDEO_FOLDER +
+            "/" +
+            encodeURIComponent(filename)
+        );
+
+    }
+
+
+    /*
+    =====================================================
+       PUSTI VIDEO
+    =====================================================
+    */
+
+    function playSong(index) {
+
+        if (
+            index < 0 ||
+            index >= mp4Files.length
+        ) {
+            return;
+        }
+
+
+        currentIndex = index;
+
+
+        const file =
+            mp4Files[currentIndex];
+
+
+        currentSong.textContent =
+            removeExtension(file.name);
+
+
+        songNumber.textContent =
+            `${currentIndex + 1} / ${mp4Files.length}`;
+
 
         /*
-           REPEAT
+           encodeURIComponent omogućava:
+           - razmake
+           - ćirilicu
+           - Š
+           - Č
+           - Ć
+           - Ž
+           - druge znakove
         */
 
-        if (repeat) {
+        videoPlayer.src =
+            getVideoURL(file.name);
 
-            audioPlayer.currentTime = 0;
 
-            audioPlayer.play();
+        videoPlayer.load();
+
+
+        updatePlaylist();
+
+
+        /*
+           Pokušaj automatskog pokretanja.
+           Browser može blokirati autoplay,
+           što je normalno.
+        */
+
+        videoPlayer.play().catch(() => {
+
+            console.log(
+                "Autoplay je blokiran. Pritisni Play."
+            );
+
+        });
+
+    }
+
+
+    /*
+    =====================================================
+       PLAY / PAUSE
+    =====================================================
+    */
+
+    function togglePlay() {
+
+        if (!videoPlayer.src) {
+
+            playSong(currentIndex);
 
             return;
 
         }
 
 
-        /*
-           NORMALNO / SHUFFLE
-        */
+        if (videoPlayer.paused) {
 
-        nextSong();
+            videoPlayer.play();
+
+        } else {
+
+            videoPlayer.pause();
+
+        }
 
     }
-);
 
 
-/* =====================================
-   SHUFFLE
-===================================== */
+    /*
+    =====================================================
+       PRETHODNI
+    =====================================================
+    */
 
-function toggleShuffle() {
+    function previousSong() {
 
-    shuffle = !shuffle;
-
-    shuffleButton.classList.toggle(
-        "active",
-        shuffle
-    );
-
-}
+        if (mp4Files.length === 0) {
+            return;
+        }
 
 
-/* =====================================
-   REPEAT
-===================================== */
+        /*
+           Ako je video već počeo,
+           vrati ga na početak.
+        */
 
-function toggleRepeat() {
+        if (videoPlayer.currentTime > 3) {
 
-    repeat = !repeat;
+            videoPlayer.currentTime = 0;
 
-    repeatButton.classList.toggle(
-        "active",
-        repeat
-    );
+            return;
 
-}
+        }
 
 
-/* =====================================
-   AKTIVNA PESMA
-===================================== */
+        currentIndex--;
 
-function updatePlaylist() {
 
-    const songs =
-        document.querySelectorAll(".song");
+        if (currentIndex < 0) {
 
-    songs.forEach(
-        (song, index) => {
+            currentIndex =
+                mp4Files.length - 1;
+
+        }
+
+
+        playSong(currentIndex);
+
+    }
+
+
+    /*
+    =====================================================
+       SLJEDEĆI
+    =====================================================
+    */
+
+    function nextSong() {
+
+        if (mp4Files.length === 0) {
+            return;
+        }
+
+
+        if (shuffle && mp4Files.length > 1) {
+
+            let newIndex;
+
+
+            do {
+
+                newIndex =
+                    Math.floor(
+                        Math.random() *
+                        mp4Files.length
+                    );
+
+            } while (
+                newIndex === currentIndex
+            );
+
+
+            currentIndex =
+                newIndex;
+
+        }
+
+        else {
+
+            currentIndex++;
+
 
             if (
-                index === currentIndex
+                currentIndex >=
+                mp4Files.length
             ) {
 
-                song.classList.add(
-                    "active"
-                );
+                currentIndex = 0;
 
-                song.scrollIntoView({
-                    behavior: "smooth",
-                    block: "nearest"
-                });
+            }
 
-            } else {
+        }
 
-                song.classList.remove(
-                    "active"
-                );
+
+        playSong(currentIndex);
+
+    }
+
+
+    /*
+    =====================================================
+       VIDEO ZAVRŠEN
+    =====================================================
+    */
+
+    videoPlayer.addEventListener(
+        "ended",
+        () => {
+
+            if (repeat) {
+
+                videoPlayer.currentTime = 0;
+
+                videoPlayer.play();
+
+            }
+
+            else {
+
+                nextSong();
 
             }
 
         }
     );
 
-}
+
+    /*
+    =====================================================
+       PLAY / PAUSE IKONA
+    =====================================================
+    */
+
+    videoPlayer.addEventListener(
+        "play",
+        () => {
+
+            playButton.textContent =
+                "⏸ Pause";
+
+        }
+    );
 
 
-/* =====================================
-   PRVA PESMA
-===================================== */
+    videoPlayer.addEventListener(
+        "pause",
+        () => {
 
-if (mp3Files.length > 0) {
+            playButton.textContent =
+                "▶ Play";
 
-    const first =
-        mp3Files[0]
-        .replace(".mp3", "");
+        }
+    );
 
-    currentSong.textContent =
-        first;
 
-    songNumber.textContent =
-        `1 / ${mp3Files.length}`;
+    /*
+    =====================================================
+       SHUFFLE
+    =====================================================
+    */
 
-}
+    shuffleButton.addEventListener(
+        "click",
+        () => {
+
+            shuffle =
+                !shuffle;
+
+            shuffleButton.classList.toggle(
+                "active",
+                shuffle
+            );
+
+        }
+    );
+
+
+    /*
+    =====================================================
+       REPEAT
+    =====================================================
+    */
+
+    repeatButton.addEventListener(
+        "click",
+        () => {
+
+            repeat =
+                !repeat;
+
+            repeatButton.classList.toggle(
+                "active",
+                repeat
+            );
+
+        }
+    );
+
+
+    /*
+    =====================================================
+       BUTTONI
+    =====================================================
+    */
+
+    playButton.addEventListener(
+        "click",
+        togglePlay
+    );
+
+
+    previousButton.addEventListener(
+        "click",
+        previousSong
+    );
+
+
+    nextButton.addEventListener(
+        "click",
+        nextSong
+    );
+
+
+    /*
+    =====================================================
+       PRETRAGA
+    =====================================================
+    */
+
+    search.addEventListener(
+        "input",
+        () => {
+
+            const query =
+                search.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const songs =
+                document.querySelectorAll(".song");
+
+
+            songs.forEach(song => {
+
+                const name =
+                    song
+                        .querySelector(".song-name")
+                        .textContent
+                        .toLowerCase();
+
+
+                if (
+                    name.includes(query)
+                ) {
+
+                    song.style.display =
+                        "flex";
+
+                }
+
+                else {
+
+                    song.style.display =
+                        "none";
+
+                }
+
+            });
+
+        }
+    );
+
+
+    /*
+    =====================================================
+       AKTIVNA PJESMA
+    =====================================================
+    */
+
+    function updatePlaylist() {
+
+        const songs =
+            document.querySelectorAll(".song");
+
+
+        songs.forEach(
+            (song, index) => {
+
+                if (
+                    index === currentIndex
+                ) {
+
+                    song.classList.add(
+                        "active"
+                    );
+
+                    /*
+                       Automatski pomjeri
+                       playlistu do aktivnog videa
+                    */
+
+                    song.scrollIntoView({
+                        behavior: "smooth",
+                        block: "nearest"
+                    });
+
+                }
+
+                else {
+
+                    song.classList.remove(
+                        "active"
+                    );
+
+                }
+
+            }
+        );
+
+    }
+
+
+    /*
+    =====================================================
+       INFORMACIJA O TRENUTNOM VIDEU
+    =====================================================
+    */
+
+    function updateCurrentSong() {
+
+        if (
+            mp4Files.length === 0
+        ) {
+            return;
+        }
+
+
+        const file =
+            mp4Files[currentIndex];
+
+
+        currentSong.textContent =
+            removeExtension(file.name);
+
+
+        songNumber.textContent =
+            `${currentIndex + 1} / ${mp4Files.length}`;
+
+    }
+
+
+    /*
+    =====================================================
+       TIPKE NA TASTATURI
+    =====================================================
+    */
+
+    document.addEventListener(
+        "keydown",
+        (event) => {
+
+            /*
+               Ne reaguj dok korisnik piše
+               u pretrazi
+            */
+
+            if (
+                event.target.tagName ===
+                "INPUT"
+            ) {
+                return;
+            }
+
+
+            if (event.code === "Space") {
+
+                event.preventDefault();
+
+                togglePlay();
+
+            }
+
+
+            if (
+                event.code === "ArrowRight"
+            ) {
+
+                nextSong();
+
+            }
+
+
+            if (
+                event.code === "ArrowLeft"
+            ) {
+
+                previousSong();
+
+            }
+
+        }
+    );
+
+
+    /*
+    =====================================================
+       GREŠKA VIDEA
+    =====================================================
+    */
+
+    videoPlayer.addEventListener(
+        "error",
+        () => {
+
+            showError(
+                "Video se ne može učitati: " +
+                currentSong.textContent
+            );
+
+        }
+    );
+
+
+    /*
+    =====================================================
+       START
+    ===================================================== */
+
+    loadVideos();
 
 </script>
 
 </body>
 </html>
-```
