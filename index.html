@@ -1,41 +1,765 @@
+```html
 <!DOCTYPE html>
-<html>
+<html lang="sr">
 <head>
-    <meta charset="UTF-8">
-    <title>Veljo Video Muzika</title>
-    <style>
-        body { background: #0a0a0a; color: #fff; font-family: Arial; text-align: center; padding: 20px; }
-        h1 { color: #ffd700; }
-        .video-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; max-width: 1200px; margin: auto; }
-        .video-item { background: #1a1a1a; border-radius: 12px; padding: 15px; width: 320px; border: 1px solid #333; }
-        video { width: 100%; border-radius: 8px; background: #000; }
-        .video-name { margin-top: 8px; color: #aaa; }
-        footer { margin-top: 50px; padding: 20px; background: #111; color: #888; font-size: 18px; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>VELJO MP3 MUZIKA</title>
+
+<style>
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+/* HEADER */
+
+header {
+    background: #111;
+    padding: 22px;
+    text-align: center;
+    border-bottom: 2px solid #ffd700;
+}
+
+header h1 {
+    margin: 0;
+    color: #ffd700;
+    font-size: 30px;
+}
+
+/* GLAVNI KONTEJNER */
+
+.container {
+    display: flex;
+    max-width: 1400px;
+    margin: auto;
+    min-height: calc(100vh - 80px);
+}
+
+/* PLAYER */
+
+.player-area {
+    flex: 1;
+    padding: 40px;
+}
+
+/* PLAYER BOX */
+
+.player-box {
+    max-width: 800px;
+    margin: auto;
+    background: #151515;
+    border: 1px solid #333;
+    border-radius: 18px;
+    padding: 35px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(255,215,0,0.08);
+}
+
+/* NASLOV */
+
+.player-title {
+    color: #ffd700;
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+/* TRENUTNA PESMA */
+
+#currentSong {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    word-break: break-word;
+}
+
+.song-number {
+    color: #777;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* AUDIO */
+
+audio {
+    width: 100%;
+    margin-bottom: 25px;
+}
+
+/* DUGMAD */
+
+.controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.controls button {
+    background: #222;
+    color: white;
+    border: 1px solid #444;
+    border-radius: 10px;
+    padding: 13px 18px;
+    font-size: 17px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.controls button:hover {
+    background: #333;
+    border-color: #ffd700;
+    color: #ffd700;
+}
+
+.controls .main-btn {
+    background: #ffd700;
+    color: #000;
+    border-color: #ffd700;
+    font-size: 20px;
+    font-weight: bold;
+    min-width: 65px;
+}
+
+.controls .main-btn:hover {
+    background: #fff;
+    color: #000;
+}
+
+/* AKTIVNI SHUFFLE / REPEAT */
+
+.controls button.active {
+    background: #ffd700;
+    color: #000;
+    border-color: #ffd700;
+}
+
+/* MADE BY */
+
+.made-by {
+    margin-top: 25px;
+    color: #ffd700;
+    font-weight: bold;
+    font-size: 14px;
+    letter-spacing: 3px;
+}
+
+/* PLAYLIST */
+
+.playlist {
+    width: 380px;
+    background: #111;
+    border-left: 1px solid #333;
+    padding: 20px;
+    overflow-y: auto;
+    max-height: calc(100vh - 80px);
+}
+
+.playlist h2 {
+    text-align: center;
+    color: #ffd700;
+    margin-top: 0;
+    border-bottom: 1px solid #333;
+    padding-bottom: 15px;
+}
+
+/* PESMA */
+
+.song {
+    background: #191919;
+    border: 1px solid #333;
+    border-radius: 10px;
+    padding: 13px;
+    margin-bottom: 9px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.song:hover {
+    background: #252525;
+    border-color: #ffd700;
+    transform: translateX(-3px);
+}
+
+.song.active {
+    background: #302900;
+    border: 1px solid #ffd700;
+    box-shadow: 0 0 12px rgba(255,215,0,0.2);
+}
+
+.song-name {
+    font-size: 16px;
+    font-weight: bold;
+    word-break: break-word;
+}
+
+.song-made {
+    color: #ffd700;
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 2px;
+    margin-top: 5px;
+}
+
+/* FOOTER */
+
+footer {
+    text-align: center;
+    background: #111;
+    color: #ffd700;
+    padding: 20px;
+    font-weight: bold;
+    border-top: 1px solid #333;
+}
+
+/* TELEFON */
+
+@media (max-width: 850px) {
+
+    .container {
+        flex-direction: column;
+    }
+
+    .player-area {
+        padding: 20px;
+    }
+
+    .playlist {
+        width: 100%;
+        max-height: none;
+        border-left: none;
+        border-top: 1px solid #333;
+    }
+
+    .player-box {
+        padding: 22px;
+    }
+
+    #currentSong {
+        font-size: 21px;
+    }
+
+}
+
+</style>
 </head>
+
 <body>
-    <h1>🎵 VELJO VIDEO MUZIKA</h1>
-    <div class="video-grid" id="videoGrid"></div>
-    <footer>MADE BY VELJO</footer>
-    <script>
-        const videoFiles = [
-            "Dodo.mp4","Gore nego lani.mp4","James party.mp4","Mara.mp4","Nebo Sivo Kiša.mp4","Vrbasov Šapat.mp4",
-            "Zeleni Brijeg.mp4","boki.mp4","dolazim i ja.mp4","evo me stigoh.mp4","fudbal.mp4","heretic.mp4",
-            "jesen.mp4","kita.mp4","lj.mp4","mil.mp4","moja raja.mp4","moja slava.mp4","poslednja luka.mp4",
-            "svake noci.mp4","u duhu pravoslavlja.mp4","u nasim godinama.mp4","ustaj.mp4","znakovi.mp4",
-            "Ђуличан подрум.mp4","Гламочна бури.mp4","Магарац Самара.mp4","Моје пјесме су остале.mp4",
-            "На последњој степеници.mp4","Није било Торте.mp4","живот.mp4","кишни дани.mp4","нестају у мраку.mp4",
-            "систем ме дави.mp4","увод.mp4","шкорпија.mp4","ђуличан.mp4","јопет.mp4"
-        ];
-        const grid = document.getElementById('videoGrid');
-        videoFiles.forEach(file => {
-            const name = file.replace('.mp4','');
-            const div = document.createElement('div');
-            div.className = 'video-item';
-            div.innerHTML = `<video src="processed/${file}" controls></video><div class="video-name">${name}</div>`;
-            grid.appendChild(div);
-        });
-    </script>
-<footer style="text-align:center;padding:20px;background:#111;color:#fff;font-size:18px;">MADE BY VELJO</footer>
+
+
+<header>
+    <h1>🎵 VELJO MP3 MUZIKA</h1>
+</header>
+
+
+<div class="container">
+
+
+<!-- PLAYER -->
+
+<main class="player-area">
+
+    <div class="player-box">
+
+        <div class="player-title">
+            🎧 TRENUTNO SE PUŠTA
+        </div>
+
+        <div id="currentSong">
+            Izaberi pesmu
+        </div>
+
+        <div class="song-number" id="songNumber">
+            0 / 0
+        </div>
+
+        <audio id="audioPlayer" controls></audio>
+
+
+        <div class="controls">
+
+            <button onclick="previousSong()">
+                ⏮
+            </button>
+
+            <button
+                class="main-btn"
+                onclick="togglePlay()"
+                id="playButton">
+                ▶
+            </button>
+
+            <button onclick="nextSong()">
+                ⏭
+            </button>
+
+            <button
+                onclick="toggleShuffle()"
+                id="shuffleButton">
+                🔀
+            </button>
+
+            <button
+                onclick="toggleRepeat()"
+                id="repeatButton">
+                🔁
+            </button>
+
+        </div>
+
+
+        <div class="made-by">
+            MADE BY VELJO
+        </div>
+
+    </div>
+
+</main>
+
+
+<!-- PLAYLIST -->
+
+<aside class="playlist">
+
+    <h2>📂 PLAYLIST</h2>
+
+    <div id="playlist"></div>
+
+</aside>
+
+
+</div>
+
+
+<footer>
+    MADE BY VELJO
+</footer>
+
+
+
+<script>
+
+
+/* =====================================
+   MP3 FAJLOVI
+===================================== */
+
+const mp3Files = [
+
+    "Dodo.mp3",
+    "Gore nego lani.mp3",
+    "James party.mp3",
+    "Mara.mp3",
+    "Nebo Sivo Kiša.mp3",
+    "Vrbasov Šapat.mp3",
+    "Zeleni Brijeg.mp3",
+    "boki.mp3",
+    "dolazim i ja.mp3",
+    "evo me stigoh.mp3",
+    "fudbal.mp3",
+    "heretic.mp3",
+    "jesen.mp3",
+    "kita.mp3",
+    "lj.mp3",
+    "mil.mp3",
+    "moja raja.mp3",
+    "moja slava.mp3",
+    "poslednja luka.mp3",
+    "svake noci.mp3",
+    "u duhu pravoslavlja.mp3",
+    "u nasim godinama.mp3",
+    "ustaj.mp3",
+    "znakovi.mp3",
+
+    "Ђуличан подрум.mp3",
+    "Гламочна бури.mp3",
+    "Магарац Самара.mp3",
+    "Моје пјесме су остале.mp3",
+    "На последњој степеници.mp3",
+    "Није било Торте.mp3",
+    "живот.mp3",
+    "кишни дани.mp3",
+    "нестају у мраку.mp3",
+    "систем ме дави.mp3",
+    "увод.mp3",
+    "шкорпија.mp3",
+    "ђуличан.mp3",
+    "јопет.mp3"
+
+];
+
+
+/* =====================================
+   VARIJABLE
+===================================== */
+
+const audioPlayer =
+    document.getElementById("audioPlayer");
+
+const playlist =
+    document.getElementById("playlist");
+
+const currentSong =
+    document.getElementById("currentSong");
+
+const songNumber =
+    document.getElementById("songNumber");
+
+const playButton =
+    document.getElementById("playButton");
+
+const shuffleButton =
+    document.getElementById("shuffleButton");
+
+const repeatButton =
+    document.getElementById("repeatButton");
+
+
+let currentIndex = 0;
+
+let shuffle = false;
+
+let repeat = false;
+
+
+/* =====================================
+   NAPRAVI PLAYLISTU
+===================================== */
+
+mp3Files.forEach((file, index) => {
+
+    const song = document.createElement("div");
+
+    song.className = "song";
+
+    const name =
+        file.replace(".mp3", "");
+
+    song.innerHTML = `
+
+        <div class="song-name">
+            🎵 ${name}
+        </div>
+
+        <div class="song-made">
+            MADE BY VELJO
+        </div>
+
+    `;
+
+    song.onclick = () => {
+
+        playSong(index);
+
+    };
+
+    playlist.appendChild(song);
+
+});
+
+
+/* =====================================
+   PUSTI PESMU
+===================================== */
+
+function playSong(index) {
+
+    if (
+        index < 0 ||
+        index >= mp3Files.length
+    ) {
+        return;
+    }
+
+    currentIndex = index;
+
+    const file =
+        mp3Files[currentIndex];
+
+    const name =
+        file.replace(".mp3", "");
+
+    audioPlayer.src =
+        "processed/" + file;
+
+    currentSong.textContent =
+        name;
+
+    songNumber.textContent =
+        `${currentIndex + 1} / ${mp3Files.length}`;
+
+    audioPlayer.play();
+
+    updatePlaylist();
+
+}
+
+
+/* =====================================
+   PLAY / PAUSE
+===================================== */
+
+function togglePlay() {
+
+    if (!audioPlayer.src) {
+
+        playSong(currentIndex);
+
+        return;
+
+    }
+
+    if (audioPlayer.paused) {
+
+        audioPlayer.play();
+
+    } else {
+
+        audioPlayer.pause();
+
+    }
+
+}
+
+
+/* =====================================
+   PROMENA IKONE PLAY
+===================================== */
+
+audioPlayer.addEventListener(
+    "play",
+    () => {
+
+        playButton.textContent = "⏸";
+
+    }
+);
+
+
+audioPlayer.addEventListener(
+    "pause",
+    () => {
+
+        playButton.textContent = "▶";
+
+    }
+);
+
+
+/* =====================================
+   NEXT
+===================================== */
+
+function nextSong() {
+
+    if (shuffle) {
+
+        let nextIndex;
+
+        do {
+
+            nextIndex =
+                Math.floor(
+                    Math.random() *
+                    mp3Files.length
+                );
+
+        } while (
+            nextIndex === currentIndex &&
+            mp3Files.length > 1
+        );
+
+        currentIndex = nextIndex;
+
+    } else {
+
+        currentIndex++;
+
+        if (
+            currentIndex >=
+            mp3Files.length
+        ) {
+
+            currentIndex = 0;
+
+        }
+
+    }
+
+    playSong(currentIndex);
+
+}
+
+
+/* =====================================
+   PREVIOUS
+===================================== */
+
+function previousSong() {
+
+    /*
+       Ako je pesma već prošla
+       više od 3 sekunde,
+       vrati je na početak.
+    */
+
+    if (audioPlayer.currentTime > 3) {
+
+        audioPlayer.currentTime = 0;
+
+        return;
+
+    }
+
+
+    currentIndex--;
+
+    if (currentIndex < 0) {
+
+        currentIndex =
+            mp3Files.length - 1;
+
+    }
+
+    playSong(currentIndex);
+
+}
+
+
+/* =====================================
+   AUTOMATSKI SLEDEĆA PESMA
+===================================== */
+
+audioPlayer.addEventListener(
+    "ended",
+    () => {
+
+        /*
+           REPEAT
+        */
+
+        if (repeat) {
+
+            audioPlayer.currentTime = 0;
+
+            audioPlayer.play();
+
+            return;
+
+        }
+
+
+        /*
+           NORMALNO / SHUFFLE
+        */
+
+        nextSong();
+
+    }
+);
+
+
+/* =====================================
+   SHUFFLE
+===================================== */
+
+function toggleShuffle() {
+
+    shuffle = !shuffle;
+
+    shuffleButton.classList.toggle(
+        "active",
+        shuffle
+    );
+
+}
+
+
+/* =====================================
+   REPEAT
+===================================== */
+
+function toggleRepeat() {
+
+    repeat = !repeat;
+
+    repeatButton.classList.toggle(
+        "active",
+        repeat
+    );
+
+}
+
+
+/* =====================================
+   AKTIVNA PESMA
+===================================== */
+
+function updatePlaylist() {
+
+    const songs =
+        document.querySelectorAll(".song");
+
+    songs.forEach(
+        (song, index) => {
+
+            if (
+                index === currentIndex
+            ) {
+
+                song.classList.add(
+                    "active"
+                );
+
+                song.scrollIntoView({
+                    behavior: "smooth",
+                    block: "nearest"
+                });
+
+            } else {
+
+                song.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =====================================
+   PRVA PESMA
+===================================== */
+
+if (mp3Files.length > 0) {
+
+    const first =
+        mp3Files[0]
+        .replace(".mp3", "");
+
+    currentSong.textContent =
+        first;
+
+    songNumber.textContent =
+        `1 / ${mp3Files.length}`;
+
+}
+
+</script>
+
 </body>
 </html>
+```
