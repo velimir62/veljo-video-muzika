@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Veljo Video</title>
+    <style>
+        body { background: #0a0a0a; color: #fff; font-family: Arial; padding: 20px; text-align: center; }
+        .video-box { max-width: 800px; margin: auto; background: #1a1a1a; padding: 20px; border-radius: 12px; }
+        video { width: 100%; max-height: 70vh; background: #000; border-radius: 8px; }
+        .song-list { max-width: 800px; margin: 20px auto; text-align: left; }
+        .song-item { padding: 10px; border-bottom: 1px solid #333; cursor: pointer; }
+        .song-item:hover { background: #222; }
+        .song-item.active { background: #332d00; border-left: 3px solid #ffd700; }
+        .lyrics { max-width: 800px; margin: 20px auto; background: #1a1a1a; padding: 20px; border-radius: 12px; text-align: left; white-space: pre-wrap; }
+        footer { margin-top: 40px; color: #666; }
+    </style>
+</head>
+<body>
+    <h1>Veljo Video</h1>
+    <div class="video-box">
+        <video id="videoPlayer" controls></video>
+        <div id="currentTitle" style="color:#ffd700;margin-top:10px;">Odaberi video</div>
+    </div>
+    <div class="song-list" id="songList"></div>
+    <div class="lyrics" id="lyricsDisplay">📝 Klikni na video za tekst</div>
+    <footer>MADE BY VELJO</footer>
+
+    <script>
+        // MP4 fajlovi (svi iz root foldera)
+        const songs = [
+            "boki.mp4", "evo me stigoh.mp4", "fudbal.mp4", "heretic.mp4",
+            "James party.mp4", "jesen.mp4", "lj.mp4", "Mara.mp4",
+            "mil.mp4", "moja raja.mp4", "moja slava.mp4", "Nebo Sivo Kiša.mp4",
+            "o nama.mp4", "poslednja luka.mp4", "svake noci.mp4",
+            "u nasim godinama.mp4", "Vrbasov Šapat.mp4", "Zeleni Brijeg.mp4",
+            "znakovi.mp4", "Гламочна бури.mp4", "Буличан подрум.mp4",
+            "ћуличан.mp4", "живот.mp4", "кишни дани.mp4",
+            "нестају у мраку.mp4", "Није било Торте.mp4", "систем ме дави.mp4",
+            "увод.mp4"
+        ];
+
+        // Tekstovi pjesama (dodaj sve)
+        const lyrics = {};
+
+        let current = 0;
+        const video = document.getElementById('videoPlayer');
+        const list = document.getElementById('songList');
+        const title = document.getElementById('currentTitle');
+        const lyricsDiv = document.getElementById('lyricsDisplay');
+
+        function loadSong(i) {
+            current = i;
+            const name = songs[i];
+            video.src = `https://raw.githubusercontent.com/velimir62/veljo-video-muzika/main/${encodeURIComponent(name)}`;
+            video.load();
+            title.textContent = name.replace('.mp4', '');
+            document.querySelectorAll('.song-item').forEach((el, idx) => el.classList.toggle('active', idx === i));
+            lyricsDiv.textContent = `📝 ${lyrics[name] || 'Nema teksta'}`;
+            video.play().catch(() => {});
+        }
+
+        songs.forEach((s, i) => {
+            const div = document.createElement('div');
+            div.className = 'song-item';
+            div.textContent = s.replace('.mp4', '');
+            div.onclick = () => loadSong(i);
+            list.appendChild(div);
+        });
+
+        if (songs.length) loadSong(0);
+    </script>
+</body>
+</html>
