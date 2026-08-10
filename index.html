@@ -5,170 +5,178 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Veljo Video Muzika</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
         body {
-            background: #0a0a0a;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
             padding: 20px;
-            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
-        h1 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 10px;
-            color: #ff4444;
-            text-shadow: 0 0 20px rgba(255, 68, 68, 0.3);
-        }
-
-        .subtitle {
-            text-align: center;
-            color: #888;
-            margin-bottom: 40px;
-            font-size: 1.1rem;
-        }
-
-        .gallery {
+        h1 { color: #333; }
+        .video-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .video-card {
-            background: #1a1a1a;
-            border-radius: 12px;
-            overflow: hidden;
-            border: 1px solid #333;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .video-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 40px rgba(255, 68, 68, 0.15);
-            border-color: #ff4444;
-        }
-
-        .video-card video {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 20px;
             width: 100%;
-            height: 300px;
-            object-fit: cover;
-            display: block;
+            max-width: 1200px;
+        }
+        .video-item {
+            background: white;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .video-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .video-item img {
+            width: 100%;
+            height: auto;
+            border-radius: 4px;
             background: #000;
         }
-
-        .video-card .info {
-            padding: 15px 20px;
-        }
-
-        .video-card .info h3 {
-            font-size: 1.1rem;
-            color: #fff;
-            word-break: break-all;
-        }
-
-        .video-card .info .filename {
-            color: #888;
-            font-size: 0.85rem;
+        .video-item span {
+            display: block;
             margin-top: 5px;
-            font-family: monospace;
+            font-size: 14px;
+            word-wrap: break-word;
         }
-
-        .video-card .controls-hint {
-            color: #666;
-            font-size: 0.8rem;
-            margin-top: 8px;
-            display: flex;
-            gap: 15px;
+        /* Lightbox za gledanje videa */
+        #video-player {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
         }
-
-        .video-card .controls-hint span {
-            background: #252525;
-            padding: 2px 10px;
-            border-radius: 4px;
+        #video-player video {
+            max-width: 90%;
+            max-height: 90%;
         }
-
-        /* Responsive */
-        @media (max-width: 600px) {
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .video-card video {
-                height: 200px;
-            }
+        #close-btn {
+            position: absolute;
+            top: 20px; right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            font-family: sans-serif;
+        }
+        #loading {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <h1>🎵 Veljo Video Muzika</h1>
-    <p class="subtitle">📹 MP4 video galerija</p>
 
-    <div class="gallery">
-        <!-- систем ме дави.mp4 -->
-        <div class="video-card">
-            <video controls preload="metadata">
-                <source src="icons/систем ме дави.mp4" type="video/mp4">
-                Tvoj pretraživač ne podržava video tag.
-            </video>
-            <div class="info">
-                <h3>🎬 Систем ме дави</h3>
-                <div class="filename">систем ме дави.mp4</div>
-                <div class="controls-hint">
-                    <span>▶ Play</span>
-                    <span>🔊 Volume</span>
-                    <span>⛶ Fullscreen</span>
-                </div>
-            </div>
-        </div>
+    <h1>Veljo Video Muzika</h1>
+    <div id="loading">Učitavam fajlove sa GitHub-a...</div>
 
-        <!-- увод.mp4 -->
-        <div class="video-card">
-            <video controls preload="metadata">
-                <source src="icons/увод.mp4" type="video/mp4">
-                Tvoj pretraživač ne podržava video tag.
-            </video>
-            <div class="info">
-                <h3>🎬 Увод</h3>
-                <div class="filename">увод.mp4</div>
-                <div class="controls-hint">
-                    <span>▶ Play</span>
-                    <span>🔊 Volume</span>
-                    <span>⛶ Fullscreen</span>
-                </div>
-            </div>
-        </div>
+    <div class="video-grid" id="grid"></div>
 
-        <!-- шкорпија.mp4 -->
-        <div class="video-card">
-            <video controls preload="metadata">
-                <source src="icons/шкорпија.mp4" type="video/mp4">
-                Tvoj pretraživač ne podržava video tag.
-            </video>
-            <div class="info">
-                <h3>🎬 Шкорпија</h3>
-                <div class="filename">шкорпија.mp4</div>
-                <div class="controls-hint">
-                    <span>▶ Play</span>
-                    <span>🔊 Volume</span>
-                    <span>⛶ Fullscreen</span>
-                </div>
-            </div>
-        </div>
+    <!-- Player za video -->
+    <div id="video-player" onclick="closePlayer()">
+        <span id="close-btn">&times;</span>
+        <video id="current-video" controls></video>
     </div>
 
-    <footer style="text-align: center; margin-top: 50px; color: #444; font-size: 0.85rem;">
-        <p>📁 Fajlovi iz <code>icons/</code> foldera</p>
-    </footer>
+    <script>
+        // Ovo je spisak tvojih fajlova sa slike. 
+        // Ako fali neki ili imaš novi, samo ga dodaj u listu ispod unutar navodnika.
+        const videoFiles = [
+            "boki.mp4",
+            "evo me stigoh.mp4",
+            "fudbal.mp4",
+            "generiraj.sh",
+            "heretic.mp4",
+            "index.html", // Ovo ignorišemo u kodu ispod
+            "James party.mp4",
+            "jesen.mp4",
+            "lj.mp4",
+            "Mara.mp4",
+            "mil.mp4",
+            "Milorad Dodik i Aleksandar Vučić u Donjoj ....mp4",
+            "moja raja.mp4",
+            "moja slava.mp4",
+            "Nebo Sivo Kiša.mp4",
+            "o nama.mp4",
+            "poslednja luka.mp4",
+            "svake noci.mp4",
+            "u nasim godinama.mp4",
+            "ustaj.mp4",
+            "Vrbasov Šapat.mp4",
+            "Zeleni Brijeg.mp4",
+            "znakovi.mp4",
+            "Glamočna buri.mp4",
+            "Buličan podrum.mp4",
+            "huličan.mp4",
+            "život.mp4",
+            "kišni dani.mp4",
+            "Magarač Samara.mp4",
+            "Moje riješme su ostale.mp4",
+            "Na posljednjoj stepenici.mp4",
+            "nestaju u mraku.mp4",
+            "Nije bilo Torte.mp4",
+            "sistem me davi.mp4",
+            "uvod.mp4",
+            "škorpija.mp4"
+        ];
+
+        const grid = document.getElementById('grid');
+        const loading = document.getElementById('loading');
+
+        // Filtriramo samo MP4 fajlove (da ne prikazuje .sh ili .html na listi)
+        const mp4Files = videoFiles.filter(file => file.endsWith('.mp4'));
+
+        if (mp4Files.length === 0) {
+            loading.innerText = "Nema MP4 fajlova u listi.";
+        } else {
+            loading.style.display = 'none'; // Sakrij poruku o učitavanju
+            
+            mp4Files.forEach(filename => {
+                // Pravimo link do fajla na GitHub-u
+                // Zamenjujemo razmake sa %20 jer HTML linkovi ne trpe razmake
+                const safeFilename = filename.replace(/ /g, '%20');
+                const fileUrl = `https://raw.githubusercontent.com/velimir62/veljo-video-muzika/main/${safeFilename}`;
+
+                const div = document.createElement('div');
+                div.className = 'video-item';
+                div.innerHTML = `
+                    <img src="https://img.icons8.com/ios-filled/50/000000/video.png" alt="Video icon">
+                    <span>${filename}</span>
+                `;
+                
+                // Kada klikneš na video, pusti ga
+                div.onclick = () => playVideo(fileUrl);
+                
+                grid.appendChild(div);
+            });
+        }
+
+        function playVideo(url) {
+            const player = document.getElementById('video-player');
+            const video = document.getElementById('current-video');
+            video.src = url;
+            player.style.display = 'flex';
+            video.play();
+        }
+
+        function closePlayer() {
+            const player = document.getElementById('video-player');
+            const video = document.getElementById('current-video');
+            video.pause();
+            video.src = '';
+            player.style.display = 'none';
+        }
+    </script>
 </body>
 </html>
