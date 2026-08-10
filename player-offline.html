@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Offline MP3 Player</title>
+    <style>
+        body { font-family: sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { text-align: center; }
+        #player { background: #16213e; padding: 20px; border-radius: 12px; max-width: 600px; margin: auto; }
+        audio { width: 100%; margin: 10px 0; }
+        #playlist { list-style: none; padding: 0; max-height: 400px; overflow-y: auto; }
+        #playlist li { padding: 8px 12px; margin: 4px 0; background: #0f3460; border-radius: 8px; cursor: pointer; }
+        #playlist li:hover { background: #1a4a7a; }
+        .playing { background: #4CAF50 !important; }
+        .back { display: block; margin-top: 20px; color: #4CAF50; text-align: center; }
+    </style>
+</head>
+<body>
+    <h1>🎵 Offline MP3 Player</h1>
+    <div id="player">
+        <audio id="audioPlayer" controls></audio>
+        <div id="nowPlaying" style="text-align:center; margin-top:8px;">Select a song</div>
+        <ul id="playlist"></ul>
+    </div>
+    <a href="/" class="back">⬅ Back to menu</a>
+
+    <script>
+        (function() {
+            const audio = document.getElementById('audioPlayer');
+            const playlistEl = document.getElementById('playlist');
+            const nowPlaying = document.getElementById('nowPlaying');
+
+            // Fetch songs.txt instead of directory listing
+            function loadSongs() {
+                return fetch('/songs.txt')
+                    .then(response => {
+                        if (!response.ok) throw new Error('songs.txt not found');
+                        return response.text();
+                    })
+                    .then(text => {
+                        const lines = text.split('\n')
+                            .map(line => line.trim())
+                            .filter(line => line.length > 0 && line.endsWith('.mp3'));
+                        return lines;
+                    })
+                    .catch(err => {
+                        console.error('Error loading songs.txt:', err);
+                        return [];
+                    });
+            }
+
+            function buildPlaylist(files) {
+                playlistEl.innerHTML = '';
+                if (files.length === 0) {
+                    playlistEl.innerHTML = '<li style="color:#ff6b6b;">No MP3 files found. Run: ls *.mp3 > songs.txt</li>';
+                    return;
+                }
+                files.forEach(file => {
+                    const li = document.createElement('li');
+                    // Display name without .mp3
+                    const displayName = file.replace(/\.mp3$/i, '').replace(/_/g, ' ');
+                    li.textContent = displayName;
+                    li.dataset.file = file;
+                    li.addEventListener('click', function() {
+                        playFile(file);
+                    });
+                    playlistEl.appendChild(li);
+                });
+                // Auto-play first song
+                if (files.length > 0) {
+                    playFile(files[0]);
+                }
+            }
+
+            function playFile(filename) {
+                audio.src = filename;
+                audio.load();
+                audio.play().catch(e => console.log('Autoplay blocked, click play manually.'));
+                nowPlaying.textContent = '▶ Playing: ' + filename.replace(/\.mp3$/i, '');
+                // Highlight active
+                const items = playlistEl.querySelectorAll('li');
+                items.forEach(li => li.classList.remove('playing'));
+                items.forEach(li => {
+                    if (li.dataset.file === filename) li.classList.add('playing');
+                });
+            }
+
+            // Load and initialize
+            loadSongs().then(files => {
+                buildPlaylist(files);
+            });
+        })();
+    </script>
+</body>
+</html>
