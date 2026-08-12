@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>VELJO-VIDEO</title>
 
 <style>
@@ -15,8 +14,8 @@ body {
     margin: 0;
     padding: 20px;
     background: #0b1020;
-    color: #e8e8e8;
-    font-family: Arial, Helvetica, sans-serif;
+    color: #eee;
+    font-family: Arial, sans-serif;
 }
 
 .container {
@@ -33,33 +32,28 @@ h1 {
 
 .subtitle {
     text-align: center;
-    color: #9ca3af;
+    color: #aaa;
     margin-bottom: 20px;
 }
 
-.navigation {
+.nav {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
-.navigation a {
+.nav a {
     flex: 1;
     padding: 14px;
     text-align: center;
     text-decoration: none;
     color: white;
     background: #163d6b;
-    border-radius: 9px;
+    border-radius: 8px;
     font-weight: bold;
-    font-size: 17px;
 }
 
-.navigation a.active {
-    background: #e94560;
-}
-
-.navigation a:hover {
+.nav a.active {
     background: #e94560;
 }
 
@@ -67,27 +61,24 @@ h1 {
     background: #16213e;
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 8px 30px rgba(0,0,0,.35);
 }
 
-.now-playing {
+.now {
     text-align: center;
     color: #e94560;
-    font-size: 19px;
     font-weight: bold;
+    font-size: 18px;
     margin-bottom: 15px;
-    min-height: 24px;
 }
 
 video {
     width: 100%;
     max-height: 65vh;
-    display: block;
-    background: black;
+    background: #000;
     border-radius: 10px;
 }
 
-.controls {
+.buttons {
     display: flex;
     gap: 10px;
     margin-top: 15px;
@@ -109,10 +100,6 @@ button:hover {
     background: #ff5570;
 }
 
-button:active {
-    transform: scale(.98);
-}
-
 .playlist-title {
     margin-top: 25px;
     color: #e94560;
@@ -128,15 +115,13 @@ ul {
 li {
     background: #16213e;
     margin: 8px 0;
-    padding: 14px 16px;
-    border-radius: 9px;
+    padding: 14px;
+    border-radius: 8px;
     cursor: pointer;
-    transition: .2s;
 }
 
 li:hover {
     background: #0f3460;
-    transform: scale(1.01);
 }
 
 li.active {
@@ -148,28 +133,22 @@ li.active {
     text-align: center;
     color: #888;
     margin-top: 20px;
-    font-size: 14px;
 }
 
 .error {
     color: #ff4d6d;
-    text-align: center;
     font-weight: bold;
 }
 
 @media (max-width: 600px) {
 
-    body {
-        padding: 12px;
+    .nav,
+    .buttons {
+        flex-direction: column;
     }
 
     h1 {
         font-size: 29px;
-    }
-
-    .navigation,
-    .controls {
-        flex-direction: column;
     }
 }
 </style>
@@ -179,138 +158,122 @@ li.active {
 
 <div class="container">
 
-    <h1>🎬 VELJO-VIDEO</h1>
+<h1>🎬 VELJO-VIDEO</h1>
 
-    <div class="subtitle">
-        My Media Center — MP4
-    </div>
+<div class="subtitle">
+    My Media Center — MP4
+</div>
 
-    <div class="navigation">
+<div class="nav">
 
-        <a
-            href="https://velimir62.github.io/moja-muzika/">
-            🎵 VELJO-RADIO
-        </a>
+<a
+href="https://velimir62.github.io/moja-muzika/">
+🎵 VELJO-RADIO
+</a>
 
-        <a
-            href="https://velimir62.github.io/veljo-video-muzika/"
-            class="active">
-            🎬 VELJO-VIDEO
-        </a>
+<a
+href="https://velimir62.github.io/veljo-video-muzika/"
+class="active">
+🎬 VELJO-VIDEO
+</a>
 
-    </div>
+</div>
 
-    <div class="player-box">
+<div class="player-box">
 
-        <div id="nowPlaying" class="now-playing">
-            🎬 Učitavanje videa...
-        </div>
+<div id="now" class="now">
+🎬 Učitavanje videa...
+</div>
 
-        <video
-            id="player"
-            controls
-            playsinline
-            preload="metadata">
-        </video>
+<video
+id="player"
+controls
+playsinline
+preload="metadata">
+</video>
 
-        <div class="controls">
+<div class="buttons">
 
-            <button id="play">
-                ▶ Pokreni
-            </button>
+<button id="play">
+▶ Pokreni
+</button>
 
-            <button id="prev">
-                ⏮ Prethodni
-            </button>
+<button id="prev">
+⏮ Prethodni
+</button>
 
-            <button id="next">
-                Sljedeći ⏭
-            </button>
+<button id="next">
+Sljedeći ⏭
+</button>
 
-        </div>
+</div>
 
-    </div>
+</div>
 
-    <div class="playlist-title">
-        🎬 Video Playlist
-    </div>
+<div class="playlist-title">
+🎬 Video Playlist
+</div>
 
-    <ul id="playlist"></ul>
+<ul id="playlist"></ul>
 
-    <div id="status" class="status">
-        Učitavanje...
-    </div>
+<div id="status" class="status">
+Učitavanje...
+</div>
 
 </div>
 
 <script>
 
-const OWNER = "velimir62";
-const REPO = "veljo-video-muzika";
-const FOLDER = "music";
+const API =
+"https://api.github.com/repos/velimir62/veljo-video-muzika/contents/";
 
 const playlist =
-    document.getElementById("playlist");
+document.getElementById("playlist");
 
 const player =
-    document.getElementById("player");
+document.getElementById("player");
 
-const nowPlaying =
-    document.getElementById("nowPlaying");
+const now =
+document.getElementById("now");
 
 const status =
-    document.getElementById("status");
-
-const playButton =
-    document.getElementById("play");
-
-const prevButton =
-    document.getElementById("prev");
-
-const nextButton =
-    document.getElementById("next");
+document.getElementById("status");
 
 let videos = [];
 let current = -1;
 
 
-/* ----------------------------------
-   UČITAVANJE MP4 SA GITHUBA
----------------------------------- */
+/* UČITAJ MP4 IZ ROOTA */
 
 async function loadVideos() {
 
-    const api =
-        `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FOLDER}`;
-
     const response =
-        await fetch(api, {
-            cache: "no-store"
-        });
+    await fetch(API, {
+        cache: "no-store"
+    });
 
     if (!response.ok) {
         throw new Error(
-            "GitHub ne može otvoriti folder music/"
+            "GitHub API nije dostupan."
         );
     }
 
     const files =
-        await response.json();
+    await response.json();
 
     videos = files
-        .filter(file =>
-            file.type === "file" &&
-            file.name
-                .toLowerCase()
-                .endsWith(".mp4")
-        )
-        .map(file => ({
-            title: file.name.replace(
-                /\.mp4$/i,
-                ""
-            ),
-            url: file.download_url
-        }));
+    .filter(file =>
+        file.type === "file" &&
+        file.name
+        .toLowerCase()
+        .endsWith(".mp4")
+    )
+    .map(file => ({
+        title: file.name
+        .replace(/\.mp4$/i, ""),
+
+        url: file.download_url
+    }));
 
     videos.sort((a, b) =>
         a.title.localeCompare(
@@ -325,9 +288,7 @@ async function loadVideos() {
 }
 
 
-/* ----------------------------------
-   PLAYLISTA
----------------------------------- */
+/* PLAYLISTA */
 
 function showPlaylist() {
 
@@ -336,28 +297,25 @@ function showPlaylist() {
     videos.forEach((video, index) => {
 
         const li =
-            document.createElement("li");
+        document.createElement("li");
 
         li.textContent =
-            "🎬 " + video.title;
+        "🎬 " + video.title;
 
-        li.addEventListener(
-            "click",
-            () => playVideo(index)
-        );
+        li.onclick = function() {
+            playVideo(index);
+        };
 
         playlist.appendChild(li);
     });
 
     status.textContent =
-        videos.length +
-        " MP4 fajlova pronađeno";
+    videos.length +
+    " MP4 fajlova pronađeno";
 }
 
 
-/* ----------------------------------
-   POKRETANJE VIDEA
----------------------------------- */
+/* PUSTI VIDEO */
 
 function playVideo(index) {
 
@@ -371,151 +329,118 @@ function playVideo(index) {
     current = index;
 
     player.src =
-        videos[current].url;
+    videos[index].url;
 
-    nowPlaying.textContent =
-        "🎬 " +
-        videos[current].title +
-        "   (" +
-        (current + 1) +
-        " / " +
-        videos.length +
-        ")";
+    now.textContent =
+    "🎬 " +
+    videos[index].title +
+    " (" +
+    (index + 1) +
+    " / " +
+    videos.length +
+    ")";
 
     document.title =
-        videos[current].title +
-        " - VELJO-VIDEO";
+    videos[index].title +
+    " - VELJO-VIDEO";
 
     Array.from(
         playlist.children
-    ).forEach(li => {
-        li.classList.remove("active");
-    });
+    ).forEach(li =>
+        li.classList.remove("active")
+    );
 
-    const active =
-        playlist.children[current];
+    if (playlist.children[index]) {
 
-    if (active) {
-
-        active.classList.add("active");
-
-        active.scrollIntoView({
-            behavior: "smooth",
-            block: "center"
-        });
+        playlist.children[index]
+        .classList.add("active");
     }
 }
 
 
-/* ----------------------------------
-   POKRENI
----------------------------------- */
+/* POKRENI */
 
-playButton.addEventListener(
-    "click",
-    function () {
+document.getElementById("play").onclick =
+function() {
 
-        if (videos.length === 0) {
-            return;
-        }
+    if (videos.length === 0) {
+        return;
+    }
 
-        if (current === -1) {
-            playVideo(0);
-        }
+    if (current === -1) {
+        playVideo(0);
+    }
+
+    player.play().catch(() => {});
+};
+
+
+/* PRETHODNI */
+
+document.getElementById("prev").onclick =
+function() {
+
+    if (current > 0) {
+
+        playVideo(current - 1);
 
         player.play().catch(() => {});
     }
-);
+};
 
 
-/* ----------------------------------
-   PRETHODNI
----------------------------------- */
+/* SLJEDEĆI */
 
-prevButton.addEventListener(
-    "click",
-    function () {
+document.getElementById("next").onclick =
+function() {
 
-        if (current > 0) {
+    if (
+        current < videos.length - 1
+    ) {
 
-            playVideo(current - 1);
+        playVideo(current + 1);
 
-            player.play().catch(() => {});
-        }
+        player.play().catch(() => {});
     }
-);
+};
 
 
-/* ----------------------------------
-   SLJEDEĆI
----------------------------------- */
+/* AUTOMATSKI SLJEDEĆI */
 
-nextButton.addEventListener(
-    "click",
-    function () {
+player.onended = function() {
 
-        if (
-            current < videos.length - 1
-        ) {
+    if (
+        current < videos.length - 1
+    ) {
 
-            playVideo(current + 1);
+        playVideo(current + 1);
 
-            player.play().catch(() => {});
-        }
+        player.play().catch(() => {});
     }
-);
+};
 
 
-/* ----------------------------------
-   AUTOMATSKI SLJEDEĆI VIDEO
----------------------------------- */
+/* TIPKE */
 
-player.addEventListener(
-    "ended",
-    function () {
+document.onkeydown = function(e) {
 
-        if (
-            current < videos.length - 1
-        ) {
-
-            playVideo(current + 1);
-
-            player.play().catch(() => {});
-        }
+    if (
+        e.key === "ArrowRight" &&
+        current < videos.length - 1
+    ) {
+        playVideo(current + 1);
     }
-);
 
-
-/* ----------------------------------
-   TIPKE
----------------------------------- */
-
-document.addEventListener(
-    "keydown",
-    function (e) {
-
-        if (
-            e.key === "ArrowRight" &&
-            current < videos.length - 1
-        ) {
-
-            playVideo(current + 1);
-        }
-
-        if (
-            e.key === "ArrowLeft" &&
-            current > 0
-        ) {
-
-            playVideo(current - 1);
-        }
+    if (
+        e.key === "ArrowLeft" &&
+        current > 0
+    ) {
+        playVideo(current - 1);
     }
-);
+};
 
 
-/* ----------------------------------
-   START
----------------------------------- */
+/* START */
 
 async function start() {
 
@@ -525,31 +450,33 @@ async function start() {
 
         if (videos.length === 0) {
 
-            nowPlaying.textContent =
-                "🎬 Nema MP4 fajlova";
+            now.textContent =
+            "🎬 Nema MP4 fajlova";
 
             status.textContent =
-                "Provjeri da li su MP4 fajlovi u music/ folderu.";
+            "Nisu pronađeni MP4 fajlovi.";
 
             return;
         }
 
         showPlaylist();
 
-        nowPlaying.textContent =
-            "🎬 " +
-            videos.length +
-            " MP4 fajlova spremno";
+        now.textContent =
+        "🎬 " +
+        videos.length +
+        " MP4 fajlova spremno";
 
     } catch (error) {
 
         console.error(error);
 
-        nowPlaying.innerHTML =
-            '<span class="error">❌ Greška pri učitavanju videa</span>';
+        now.innerHTML =
+        '<span class="error">' +
+        "❌ Greška pri učitavanju videa" +
+        "</span>";
 
         status.textContent =
-            error.message;
+        error.message;
     }
 }
 
