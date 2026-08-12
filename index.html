@@ -1,183 +1,531 @@
 <!DOCTYPE html>
-<html lang="sr">
+<html lang="hr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Veljo Video Muzika</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f0f0;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        h1 { color: #333; }
-        .video-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 20px;
-            width: 100%;
-            max-width: 1200px;
-        }
-        .video-item {
-            background: white;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            text-align: center;
-            cursor: pointer;
-            transition: transform 0.2s;
-        }
-        .video-item:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .video-item img {
-            width: 100%;
-            height: auto;
-            border-radius: 4px;
-            background: #000;
-        }
-        .video-item span {
-            display: block;
-            margin-top: 5px;
-            font-size: 14px;
-            word-wrap: break-word;
-        }
-        /* Lightbox za gledanje videa */
-        #video-player {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.9);
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-        #video-player video {
-            max-width: 90%;
-            max-height: 90%;
-        }
-        #close-btn {
-            position: absolute;
-            top: 20px; right: 30px;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-            font-family: sans-serif;
-        }
-        #loading {
-            margin-top: 20px;
-            font-size: 18px;
-            color: #555;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VELJO-VIDEO</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    padding: 20px;
+    background: #0b1020;
+    color: #e8e8e8;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+h1 {
+    text-align: center;
+    color: #e94560;
+    font-size: 36px;
+    margin: 10px 0 5px;
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #9ca3af;
+    margin-bottom: 20px;
+}
+
+.player-box {
+    background: #16213e;
+    padding: 20px;
+    border-radius: 14px;
+    box-shadow: 0 8px 30px rgba(0,0,0,.35);
+    margin-bottom: 20px;
+}
+
+.now-playing {
+    text-align: center;
+    color: #e94560;
+    font-weight: bold;
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+video {
+    width: 100%;
+    max-height: 65vh;
+    background: #000;
+    border-radius: 10px;
+    display: block;
+}
+
+.controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+button {
+    flex: 1;
+    padding: 13px;
+    border: 0;
+    border-radius: 8px;
+    background: #e94560;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover {
+    background: #ff5570;
+}
+
+button:active {
+    transform: scale(.98);
+}
+
+.navigation {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.navigation a {
+    flex: 1;
+    text-decoration: none;
+    text-align: center;
+    padding: 13px;
+    border-radius: 8px;
+    background: #0f3460;
+    color: white;
+    font-weight: bold;
+}
+
+.navigation a:hover {
+    background: #e94560;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    background: #16213e;
+    margin: 8px 0;
+    padding: 13px 16px;
+    border-radius: 9px;
+    transition: .2s;
+}
+
+li:hover {
+    background: #0f3460;
+    transform: scale(1.01);
+}
+
+li.active {
+    background: #0f3460;
+    border-left: 4px solid #e94560;
+}
+
+li a {
+    color: #e8e8e8;
+    text-decoration: none;
+    display: block;
+    font-size: 17px;
+}
+
+.status {
+    text-align: center;
+    color: #777;
+    margin-top: 20px;
+    font-size: 13px;
+}
+
+@media (max-width: 600px) {
+
+    body {
+        padding: 12px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    .controls {
+        flex-direction: column;
+    }
+
+    .navigation {
+        flex-direction: column;
+    }
+}
+</style>
 </head>
+
 <body>
 
-    <h1>Veljo Video Muzika</h1>
-    <div id="loading">Učitavam fajlove sa GitHub-a...</div>
+<div class="container">
 
-    <div class="video-grid" id="grid"></div>
+    <h1>🎬 VELJO-VIDEO</h1>
+    <div class="subtitle">MP4 Media Center</div>
 
-    <!-- Player za video -->
-    <div id="video-player" onclick="closePlayer()">
-        <span id="close-btn">&times;</span>
-        <video id="current-video" controls></video>
+    <div class="navigation">
+        <a href="https://velimir62.github.io/moja-muzika/">🎵 VELJO-RADIO</a>
+        <a href="https://velimir62.github.io/veljo-video-muzika/">🎬 VELJO-VIDEO</a>
     </div>
 
-    <script>
-        // Ovo je spisak tvojih fajlova sa slike. 
-        // Ako fali neki ili imaš novi, samo ga dodaj u listu ispod unutar navodnika.
-        const videoFiles = [
-            "boki.mp4",
-            "evo me stigoh.mp4",
-            "fudbal.mp4",
-            "generiraj.sh",
-            "heretic.mp4",
-            "index.html", // Ovo ignorišemo u kodu ispod
-            "James party.mp4",
-            "jesen.mp4",
-            "lj.mp4",
-            "Mara.mp4",
-            "mil.mp4",
-            "Dodo.mp4",
-            "moja raja.mp4",
-            "moja slava.mp4",
-            "Nebo Sivo Kiša.mp4",
-            "o nama.mp4",
-            "poslednja luka.mp4",
-            "svake noci.mp4",
-            "u nasim godinama.mp4",
-            "ustaj.mp4",
-            "Vrbasov Šapat.mp4",
-            "Zeleni Brijeg.mp4",
-            "znakovi.mp4",
-            "Glamočna buri.mp4",
-            "Buličan podrum.mp4",
-            "huličan.mp4",
-            "život.mp4",
-            "kišni dani.mp4",
-            "kita.mp4",
-            "Magarač Samara.mp4",
-            "Moje riješme su ostale.mp4",
-            "Na posljednjoj stepenici.mp4",
-            "nestaju u mraku.mp4",
-            "Nije bilo Torte.mp4",
-            "sistem me davi.mp4",
-            "uvod.mp4",
-            "škorpija.mp4"
-        ];
+    <div class="player-box">
 
-        const grid = document.getElementById('grid');
-        const loading = document.getElementById('loading');
+        <div id="nowPlaying" class="now-playing">
+            🎬 Učitavanje videa...
+        </div>
 
-        // Filtriramo samo MP4 fajlove (da ne prikazuje .sh ili .html na listi)
-        const mp4Files = videoFiles.filter(file => file.endsWith('.mp4'));
+        <video
+            id="player"
+            controls
+            playsinline
+            preload="metadata">
+        </video>
 
-        if (mp4Files.length === 0) {
-            loading.innerText = "Nema MP4 fajlova u listi.";
-        } else {
-            loading.style.display = 'none'; // Sakrij poruku o učitavanju
-            
-            mp4Files.forEach(filename => {
-                // Pravimo link do fajla na GitHub-u
-                // Zamenjujemo razmake sa %20 jer HTML linkovi ne trpe razmake
-                const safeFilename = filename.replace(/ /g, '%20');
-                const fileUrl = `https://raw.githubusercontent.com/velimir62/veljo-video-muzika/main/${safeFilename}`;
+        <div class="controls">
+            <button id="play">▶ Pokreni</button>
+            <button id="prev">⏮ Prethodni</button>
+            <button id="next">Sljedeći ⏭</button>
+        </div>
 
-                const div = document.createElement('div');
-                div.className = 'video-item';
-                div.innerHTML = `
-                    <img src="https://img.icons8.com/ios-filled/50/000000/video.png" alt="Video icon">
-                    <span>${filename}</span>
-                `;
-                
-                // Kada klikneš na video, pusti ga
-                div.onclick = () => playVideo(fileUrl);
-                
-                grid.appendChild(div);
+    </div>
+
+    <ul id="playlist"></ul>
+
+    <div id="status" class="status">
+        Učitavanje...
+    </div>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function () {
+
+    const playlist =
+        document.getElementById("playlist");
+
+    const player =
+        document.getElementById("player");
+
+    const nowPlaying =
+        document.getElementById("nowPlaying");
+
+    const status =
+        document.getElementById("status");
+
+    const playButton =
+        document.getElementById("play");
+
+    const prevButton =
+        document.getElementById("prev");
+
+    const nextButton =
+        document.getElementById("next");
+
+    let videos = [];
+    let current = -1;
+
+    async function scanFolder(url) {
+
+        const fullFolderUrl =
+            new URL(
+                url,
+                window.location.href
+            ).href;
+
+        const response =
+            await fetch(
+                fullFolderUrl,
+                {
+                    cache: "no-store"
+                }
+            );
+
+        if (!response.ok) {
+            throw new Error(
+                "Ne mogu otvoriti music/"
+            );
+        }
+
+        const html =
+            await response.text();
+
+        const doc =
+            new DOMParser()
+                .parseFromString(
+                    html,
+                    "text/html"
+                );
+
+        const links =
+            Array.from(
+                doc.querySelectorAll("a")
+            );
+
+        const result = [];
+
+        for (const link of links) {
+
+            const href =
+                link.getAttribute("href");
+
+            if (
+                !href ||
+                href === "../" ||
+                href === "./"
+            ) {
+                continue;
+            }
+
+            const full =
+                new URL(
+                    href,
+                    fullFolderUrl
+                );
+
+            const pathParts =
+                full.pathname
+                    .split("/")
+                    .filter(Boolean);
+
+            const name =
+                decodeURIComponent(
+                    pathParts[
+                        pathParts.length - 1
+                    ] || ""
+                );
+
+            if (
+                name
+                    .toLowerCase()
+                    .endsWith(".mp4")
+            ) {
+
+                result.push({
+                    url: full.href,
+                    title:
+                        name.replace(
+                            /\.mp4$/i,
+                            ""
+                        )
+                });
+            }
+        }
+
+        return result;
+    }
+
+    function playVideo(index) {
+
+        if (
+            index < 0 ||
+            index >= videos.length
+        ) {
+            return;
+        }
+
+        current = index;
+
+        player.src =
+            videos[current].url;
+
+        nowPlaying.textContent =
+            "🎬 " +
+            videos[current].title +
+            " (" +
+            (current + 1) +
+            " / " +
+            videos.length +
+            ")";
+
+        document.title =
+            videos[current].title +
+            " - VELJO-VIDEO";
+
+        Array.from(
+            playlist.children
+        ).forEach(function (li) {
+            li.classList.remove("active");
+        });
+
+        const active =
+            playlist.children[current];
+
+        if (active) {
+
+            active.classList.add("active");
+
+            active.scrollIntoView({
+                behavior: "smooth",
+                block: "center"
             });
         }
+    }
 
-        function playVideo(url) {
-            const player = document.getElementById('video-player');
-            const video = document.getElementById('current-video');
-            video.src = url;
-            player.style.display = 'flex';
-            video.play();
-        }
+    function showPlaylist() {
 
-        function closePlayer() {
-            const player = document.getElementById('video-player');
-            const video = document.getElementById('current-video');
-            video.pause();
-            video.src = '';
-            player.style.display = 'none';
+        playlist.innerHTML = "";
+
+        videos.forEach(
+            function (video, index) {
+
+                const li =
+                    document.createElement("li");
+
+                const a =
+                    document.createElement("a");
+
+                a.href =
+                    video.url;
+
+                a.textContent =
+                    "🎬 " + video.title;
+
+                a.addEventListener(
+                    "click",
+                    function (e) {
+
+                        e.preventDefault();
+
+                        playVideo(index);
+                    }
+                );
+
+                li.appendChild(a);
+
+                playlist.appendChild(li);
+            }
+        );
+
+        nowPlaying.textContent =
+            "🎬 " +
+            videos.length +
+            " MP4 fajlova";
+
+        status.textContent =
+            videos.length +
+            " videa spremno";
+    }
+
+    playButton.addEventListener(
+        "click",
+        function () {
+
+            if (videos.length === 0) {
+                return;
+            }
+
+            if (current === -1) {
+                playVideo(0);
+            }
+
+            player.play().catch(
+                function () {}
+            );
         }
-    </script>
+    );
+
+    prevButton.addEventListener(
+        "click",
+        function () {
+
+            if (current > 0) {
+
+                playVideo(current - 1);
+
+                player.play().catch(
+                    function () {}
+                );
+            }
+        }
+    );
+
+    nextButton.addEventListener(
+        "click",
+        function () {
+
+            if (
+                current <
+                videos.length - 1
+            ) {
+
+                playVideo(current + 1);
+
+                player.play().catch(
+                    function () {}
+                );
+            }
+        }
+    );
+
+    player.addEventListener(
+        "ended",
+        function () {
+
+            if (
+                current <
+                videos.length - 1
+            ) {
+
+                playVideo(current + 1);
+
+                player.play().catch(
+                    function () {}
+                );
+            }
+        }
+    );
+
+    try {
+
+        videos =
+            await scanFolder("music/");
+
+        videos.sort(
+            function (a, b) {
+
+                return a.title.localeCompare(
+                    b.title,
+                    undefined,
+                    {
+                        numeric: true,
+                        sensitivity: "base"
+                    }
+                );
+            }
+        );
+
+        showPlaylist();
+
+        console.log(
+            "Učitano:",
+            videos.length,
+            "MP4 fajlova"
+        );
+
+    } catch (error) {
+
+        console.error(error);
+
+        nowPlaying.textContent =
+            "❌ Greška pri učitavanju videa";
+
+        status.textContent =
+            error.message;
+    }
+
+});
+</script>
+
 </body>
 </html>
