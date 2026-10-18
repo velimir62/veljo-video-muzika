@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://velimir62.github.io/veljo-video-muzika/sitemap.xml
