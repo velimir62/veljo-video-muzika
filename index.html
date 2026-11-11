@@ -615,18 +615,33 @@ player.addEventListener(
             isAdPlaying = true;
             nowPlaying.textContent = "🎬 Veljo Video — kratka reklama";
             player.pause();
-            player.src = "https://velimir62.github.io/veljo-video-muzika/reklama.mp4?v=2";
-            player.load();
 
-            // Sačekaj da se reklama učita prije pokretanja.
-            const startAd = function () {
-                player.play().catch(function (error) {
-                    console.error("Reklama nije pokrenuta:", error);
-                    nowPlaying.textContent = "⚠️ Reklama se nije mogla pokrenuti. Pritisni Pokreni.";
-                    isAdPlaying = false;
-                });
+            // Registruj događaje PRIJE postavljanja izvora i load().
+            // Tako ne možemo propustiti canplay ako se fajl učita veoma brzo.
+            const continueAfterAdFailure = function (reason) {
+                console.error("Reklama nije mogla biti puštena:", reason);
+                player.removeEventListener("canplay", startAd);
+                isAdPlaying = false;
+                nowPlaying.textContent = "⚠️ Reklama nije dostupna — nastavljam video.";
+                if (current < videos.length - 1) {
+                    playVideo(current + 1);
+                    player.play().catch(function () {});
+                }
             };
+
+            const startAd = function () {
+                player.removeEventListener("error", adError);
+                player.play().catch(continueAfterAdFailure);
+            };
+
+            const adError = function () {
+                continueAfterAdFailure(player.error || "Greška pri učitavanju reklame");
+            };
+
             player.addEventListener("canplay", startAd, { once: true });
+            player.addEventListener("error", adError, { once: true });
+            player.src = "https://velimir62.github.io/veljo-video-muzika/reklama.mp4";
+            player.load();
         } else if (current < videos.length - 1) {
             playVideo(current + 1);
             player.play().catch(function () {});
