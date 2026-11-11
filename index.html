@@ -36,6 +36,49 @@ h1 {
     margin-bottom: 20px;
 }
 
+.welcome-ad {
+    margin: 18px auto 22px;
+    padding: 18px 14px;
+    text-align: center;
+    color: #fff;
+    background: linear-gradient(120deg, #163d6b, #e94560, #163d6b);
+    background-size: 200% 200%;
+    border: 1px solid rgba(255,255,255,.25);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(233,69,96,.25);
+    animation: welcomeIn .9s ease-out both, welcomeGlow 4s ease-in-out infinite;
+}
+.welcome-ad strong {
+    display: block;
+    font-size: clamp(23px, 5vw, 34px);
+    letter-spacing: 1px;
+    text-shadow: 0 2px 8px rgba(0,0,0,.35);
+}
+.welcome-ad span {
+    display: block;
+    margin-top: 6px;
+    color: #ffe8ed;
+    font-size: 15px;
+}
+.welcome-ad.hide {
+    animation: welcomeOut .7s ease-in forwards;
+}
+@keyframes welcomeIn {
+    from { opacity: 0; transform: translateY(-16px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes welcomeGlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+@keyframes welcomeOut {
+    to { opacity: 0; transform: translateY(-10px); }
+}
+@media (prefers-reduced-motion: reduce) {
+    .welcome-ad { animation: none; }
+    .welcome-ad.hide { opacity: 0; }
+}
+
 .nav {
     display: flex;
     gap: 10px;
@@ -193,6 +236,11 @@ button:hover {
         My Media Center
     </div>
 
+    <div id="welcomeAd" class="welcome-ad" role="status" aria-live="polite">
+        <strong>🎉 DOBRO DOŠLI NA VELJO VIDEO! 🎬</strong>
+        <span>Vaša muzika, vaši video snimci — uživajte!</span>
+    </div>
+
     <div class="nav">
 
         <a href="https://velimir62.github.io/moja-muzika/">
@@ -277,6 +325,17 @@ const prevButton =
 
 const nextButton =
     document.getElementById("next");
+
+/* Uvodna dobrodošlica: prikazuje se pri otvaranju stranice 5 sekundi */
+window.setTimeout(function () {
+    const welcomeAd = document.getElementById("welcomeAd");
+    if (welcomeAd) {
+        welcomeAd.classList.add("hide");
+        window.setTimeout(function () {
+            welcomeAd.remove();
+        }, 750);
+    }
+}, 5000);
 
 
 let videos = [];
