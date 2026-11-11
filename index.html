@@ -404,7 +404,8 @@ async function loadVideos() {
     videos = files
         .filter(file =>
             file.type === "file" &&
-            /\.mp4$/i.test(file.name)
+            /\.mp4$/i.test(file.name) &&
+            file.name.toLowerCase() !== "reklama.mp4"
         )
         .map(file => ({
             name: file.name,
