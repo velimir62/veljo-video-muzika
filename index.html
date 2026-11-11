@@ -46,6 +46,10 @@ h1 {
     border: 1px solid rgba(255,255,255,.25);
     border-radius: 14px;
     box-shadow: 0 8px 24px rgba(233,69,96,.25);
+    display: none;
+}
+.welcome-ad.show {
+    display: block;
     animation: welcomeIn .9s ease-out both, welcomeGlow 4s ease-in-out infinite;
 }
 .welcome-ad strong {
@@ -75,7 +79,7 @@ h1 {
     to { opacity: 0; transform: translateY(-10px); }
 }
 @media (prefers-reduced-motion: reduce) {
-    .welcome-ad { animation: none; }
+    .welcome-ad.show { animation: none; }
     .welcome-ad.hide { opacity: 0; }
 }
 
@@ -236,7 +240,7 @@ button:hover {
         My Media Center
     </div>
 
-    <div id="welcomeAd" class="welcome-ad" role="status" aria-live="polite">
+    <div id="welcomeAd" class="welcome-ad show" role="status" aria-live="polite">
         <strong>🎉 DOBRO DOŠLI NA VELJO VIDEO! 🎬</strong>
         <span>Vaša muzika, vaši video snimci — uživajte!</span>
     </div>
@@ -326,16 +330,41 @@ const prevButton =
 const nextButton =
     document.getElementById("next");
 
-/* Uvodna dobrodošlica: prikazuje se pri otvaranju stranice 5 sekundi */
-window.setTimeout(function () {
-    const welcomeAd = document.getElementById("welcomeAd");
-    if (welcomeAd) {
-        welcomeAd.classList.add("hide");
-        window.setTimeout(function () {
-            welcomeAd.remove();
-        }, 750);
+/*
+    Dobrodošlica se prikazuje na početku i nakon svaka
+    dva završena videa. Poslije poruke nastavlja se reprodukcija.
+*/
+const welcomeAd = document.getElementById("welcomeAd");
+let welcomeTimer = null;
+let completedSinceAd = 0;
+
+function showWelcomeAd(afterAd) {
+    if (!welcomeAd) {
+        if (typeof afterAd === "function") afterAd();
+        return;
     }
-}, 5000);
+
+    window.clearTimeout(welcomeTimer);
+    welcomeAd.classList.remove("hide");
+    welcomeAd.classList.remove("show");
+    welcomeAd.style.display = "block";
+    void welcomeAd.offsetWidth;
+    welcomeAd.classList.add("show");
+
+    welcomeTimer = window.setTimeout(function () {
+        welcomeAd.classList.remove("show");
+        welcomeAd.classList.add("hide");
+
+        welcomeTimer = window.setTimeout(function () {
+            welcomeAd.classList.remove("hide");
+            welcomeAd.style.display = "none";
+            if (typeof afterAd === "function") afterAd();
+        }, 750);
+    }, 5000);
+}
+
+// Prva dobrodošlica pri otvaranju stranice
+showWelcomeAd();
 
 
 let videos = [];
@@ -565,13 +594,22 @@ player.addEventListener(
     "ended",
     function () {
 
-        if (
-            current < videos.length - 1
-        ) {
+        completedSinceAd++;
 
-            playVideo(current + 1);
+        const playNextVideo = function () {
+            if (current < videos.length - 1) {
+                playVideo(current + 1);
+                player.play().catch(function () {});
+            }
+        };
 
-            player.play().catch(function () {});
+        // Poslije svaka dva završena videa prikaži dobrodošlicu,
+        // pa tek onda automatski pokreni sljedeći video.
+        if (completedSinceAd >= 2) {
+            completedSinceAd = 0;
+            showWelcomeAd(playNextVideo);
+        } else {
+            playNextVideo();
         }
     }
 );
