@@ -614,15 +614,19 @@ player.addEventListener(
             completedSinceAd = 0;
             isAdPlaying = true;
             nowPlaying.textContent = "🎬 Veljo Video — kratka reklama";
-            player.src = "https://raw.githubusercontent.com/velimir62/veljo-video-muzika/main/reklama.mp4";
+            player.pause();
+            player.src = "https://velimir62.github.io/veljo-video-muzika/reklama.mp4?v=2";
             player.load();
-            player.play().catch(function () {
-                isAdPlaying = false;
-                if (current < videos.length - 1) {
-                    playVideo(current + 1);
-                    player.play().catch(function () {});
-                }
-            });
+
+            // Sačekaj da se reklama učita prije pokretanja.
+            const startAd = function () {
+                player.play().catch(function (error) {
+                    console.error("Reklama nije pokrenuta:", error);
+                    nowPlaying.textContent = "⚠️ Reklama se nije mogla pokrenuti. Pritisni Pokreni.";
+                    isAdPlaying = false;
+                });
+            };
+            player.addEventListener("canplay", startAd, { once: true });
         } else if (current < videos.length - 1) {
             playVideo(current + 1);
             player.play().catch(function () {});
