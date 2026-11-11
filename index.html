@@ -337,6 +337,7 @@ const nextButton =
 const welcomeAd = document.getElementById("welcomeAd");
 let welcomeTimer = null;
 let completedSinceAd = 0;
+let isAdPlaying = false;
 
 function showWelcomeAd(afterAd) {
     if (!welcomeAd) {
@@ -477,6 +478,8 @@ function showPlaylist() {
 */
 function playVideo(index) {
 
+    isAdPlaying = false;
+
     if (
         index < 0 ||
         index >= videos.length
@@ -594,22 +597,34 @@ player.addEventListener(
     "ended",
     function () {
 
-        completedSinceAd++;
-
-        const playNextVideo = function () {
+        // Kada se završi reklamni MP4, nastavi sljedeći obični video.
+        if (isAdPlaying) {
+            isAdPlaying = false;
             if (current < videos.length - 1) {
                 playVideo(current + 1);
                 player.play().catch(function () {});
             }
-        };
+            return;
+        }
 
-        // Poslije svaka dva završena videa prikaži dobrodošlicu,
-        // pa tek onda automatski pokreni sljedeći video.
+        completedSinceAd++;
+
         if (completedSinceAd >= 2) {
             completedSinceAd = 0;
-            showWelcomeAd(playNextVideo);
-        } else {
-            playNextVideo();
+            isAdPlaying = true;
+            nowPlaying.textContent = "🎬 Veljo Video — kratka reklama";
+            player.src = "https://raw.githubusercontent.com/velimir62/veljo-video-muzika/main/reklama.mp4";
+            player.load();
+            player.play().catch(function () {
+                isAdPlaying = false;
+                if (current < videos.length - 1) {
+                    playVideo(current + 1);
+                    player.play().catch(function () {});
+                }
+            });
+        } else if (current < videos.length - 1) {
+            playVideo(current + 1);
+            player.play().catch(function () {});
         }
     }
 );
